@@ -1,23 +1,38 @@
 const rarities = [
-  { name: "Common", multiplier: 1, baseChance: 100000 },
-  { name: "Uncommon", multiplier: 2, baseChance: 50000 },
-  { name: "Rare", multiplier: 5, baseChance: 25000 },
-  { name: "Epic", multiplier: 20, baseChance: 12500 },
-  { name: "Legendary", multiplier: 100, baseChance: 6250 },
-  { name: "Mythical", multiplier: 500, baseChance: 3125 },
-  { name: "Ascended", multiplier: 1000, baseChance: 1562.5 },
-  { name: "Transcendent", multiplier: 5000, baseChance: 781.25 },
-  { name: "Divine", multiplier: 10000, baseChance: 390.625 },
-  { name: "Omnificent", multiplier: 500000, baseChance: 195.3125 },
-  { name: "Celestial", multiplier: 1000000, baseChance: 97.65625 },
-  { name: "Ethereal", multiplier: 5000000, baseChance: 48.828125 },
-  { name: "Void", multiplier: 10000000, baseChance: 24.4140625 },
-  { name: "Quantum", multiplier: 50000000, baseChance: 12.20703125 },
-  { name: "Cosmic", multiplier: 100000000, baseChance: 6.103515625 }
+  { name: "Common", multiplier: 1, baseChance: 1 / 1 },
+  { name: "Uncommon", multiplier: 2, baseChance: 1 / 2 },
+  { name: "Rare", multiplier: 5, baseChance: 1 / 4 },
+  { name: "Epic", multiplier: 20, baseChance: 1 / 8 },
+  { name: "Legendary", multiplier: 100, baseChance: 1 / 16 },
+  { name: "Mythical", multiplier: 500, baseChance: 1 / 1024 },
+  { name: "Ascendant", multiplier: 1000, baseChance: 1 / 2048 },
+  { name: "Transcendent", multiplier: 5000, baseChance: 1 / 4096 },
+  { name: "Divine", multiplier: 10000, baseChance: 1 / 10000 },
+  { name: "Omnificent", multiplier: 500000, baseChance: 1 / 50000 },
+  { name: "Ethereal", multiplier: 1000000, baseChance: 1 / 1000000 },
+  { name: "Void", multiplier: 10000000, baseChance: 1 / 100000000 },
+  { name: "Quantum", multiplier: 50000000, baseChance: 1 / 1000000000 },
+  { name: "Cosmic", multiplier: 100000000, baseChance: 1 / 10000000000 }
 ];
 
-const molds = ["Katana", "Longsword", "Dagger", "Broadsword", "Rapier", "Scimitar", "Claymore", "Gladius"];
-const qualities = ["Poor", "Fine", "Pristine", "Masterwork", "Exquisite", "Flawless"];
+const molds = [
+  { name: "Katana", baseChance: 1 / 1 },
+  { name: "Longsword", baseChance: 1 / 4 },
+  { name: "Dagger", baseChance: 1 / 16 },
+  { name: "Broadsword", baseChance: 1 / 256 },
+  { name: "Rapier", baseChance: 1 / 2048 },
+  { name: "Scimitar", baseChance: 1 / 4096 }
+];
+
+const qualities = [
+  { name: "Poor", baseChance: 1 / 1 },
+  { name: "Fine", baseChance: 1 / 2 },
+  { name: "Pristine", baseChance: 1 / 16 },
+  { name: "Masterwork", baseChance: 1 / 256 },
+  { name: "Exquisite", baseChance: 1 / 2048 },
+  { name: "Flawless", baseChance: 1 / 4096 }
+];
+
 let gold = 0;
 let inventory = [];
 let currentSword = null;
@@ -26,15 +41,15 @@ let luckLevel = 1;
 
 function produceSword() {
   const rarity = weightedRandom(rarities);
-  const mold = molds[Math.floor(Math.random() * molds.length)];
+  const mold = weightedRandom(molds);
   const quality = weightedRandom(qualities);
   const value = Math.floor(Math.random() * 100) + rarity.multiplier * 10;
 
   currentSword = {
-    name: `${rarity.name} ${mold}`,
+    name: `${rarity.name} ${mold.name}`,
     rarity: rarity,
     quality: quality,
-    mold: mold,
+    mold: mold.name,
     value: value,
   };
   inventory.push(currentSword);
@@ -45,37 +60,40 @@ function produceSword() {
 function upgradeSword(attribute) {
   if (!currentSword) return alert("Produce a sword first!");
 
-  // RNG for upgrade success (1/4 chance)
-  if (Math.random() > 0.75) {
-    displayMessage("Upgrade failed!");
-    return;
-  }
-
   let upgraded = false;
 
   if (attribute === 'rarity') {
     const currentIndex = rarities.indexOf(currentSword.rarity);
     if (currentIndex < rarities.length - 1) {
-      const newRarity = rarities[currentIndex + 1];
-      currentSword.rarity = newRarity;
-      currentSword.value += newRarity.multiplier * 10;
-      upgraded = true;
+      const nextRarity = rarities[currentIndex + 1];
+      const upgradeChance = nextRarity.baseChance / luckLevel;
+      if (Math.random() < upgradeChance) {
+        currentSword.rarity = nextRarity;
+        currentSword.value += nextRarity.multiplier * 10;
+        upgraded = true;
+      }
     }
   } else if (attribute === 'mold') {
-    const currentIndex = molds.indexOf(currentSword.mold);
+    const currentIndex = molds.findIndex(m => m.name === currentSword.mold);
     if (currentIndex < molds.length - 1) {
-      const newMold = molds[currentIndex + 1];
-      currentSword.mold = newMold;
-      currentSword.value += 20;
-      upgraded = true;
+      const nextMold = molds[currentIndex + 1];
+      const upgradeChance = nextMold.baseChance / luckLevel;
+      if (Math.random() < upgradeChance) {
+        currentSword.mold = nextMold.name;
+        currentSword.value += 20;
+        upgraded = true;
+      }
     }
   } else if (attribute === 'quality') {
     const currentIndex = qualities.indexOf(currentSword.quality);
     if (currentIndex < qualities.length - 1) {
-      const newQuality = qualities[currentIndex + 1];
-      currentSword.quality = newQuality;
-      currentSword.value += 30;
-      upgraded = true;
+      const nextQuality = qualities[currentIndex + 1];
+      const upgradeChance = nextQuality.baseChance / luckLevel;
+      if (Math.random() < upgradeChance) {
+        currentSword.quality = nextQuality;
+        currentSword.value += 30;
+        upgraded = true;
+      }
     }
   }
 
@@ -84,7 +102,7 @@ function upgradeSword(attribute) {
   displaySword();
   updateGold();
   updateInventory();
-  displayMessage("Sword upgraded successfully!");
+  displayMessage(upgraded ? "Sword upgraded successfully!" : "Upgrade failed!");
 }
 
 function sellSword() {
@@ -139,7 +157,7 @@ function displaySword() {
       <p>Value: ${currentSword.value}</p>
       <p>Rarity: ${currentSword.rarity.name}</p>
       <p>Mold: ${currentSword.mold}</p>
-      <p>Quality: ${currentSword.quality}</p>
+      <p>Quality: ${currentSword.quality.name}</p>
     </div>
   `;
 }
@@ -167,7 +185,7 @@ function updateInventory() {
       <p>Value: ${sword.value}</p>
       <p>Rarity: ${sword.rarity.name}</p>
       <p>Mold: ${sword.mold}</p>
-      <p>Quality: ${sword.quality}</p>
+      <p>Quality: ${sword.quality.name}</p>
     </div>
   `
     )
