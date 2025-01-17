@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sword Factory Remake</title>
+  <title>Advanced Sword Factory Game</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -95,7 +95,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Sword Factory Remake</h1>
+    <h1>Advanced Sword Factory Game</h1>
     <p>Produce, upgrade, and sell swords with advanced mechanics!</p>
     <button onclick="produceSword()">Produce Sword</button>
     <button onclick="upgradeSword()">Upgrade Sword</button>
@@ -121,16 +121,16 @@
 
   <script>
     const rarities = [
-      { name: "Common", multiplier: 1, chance: 0.5 },
-      { name: "Uncommon", multiplier: 2, chance: 0.25 },
-      { name: "Rare", multiplier: 5, chance: 0.125 },
-      { name: "Epic", multiplier: 20, chance: 0.0625 },
-      { name: "Legendary", multiplier: 100, chance: 0.03125 },
-      { name: "Mythical", multiplier: 500, chance: 0.015625 },
-      { name: "Ascended", multiplier: 1000, chance: 0.0078125 },
-      { name: "Transcendent", multiplier: 5000, chance: 0.00390625 },
-      { name: "Divine", multiplier: 10000, chance: 0.001953125 },
-      { name: "Omnificent", multiplier: 500000, chance: 0.0009765625 }
+      { name: "Common", multiplier: 1, chance: 1 },
+      { name: "Uncommon", multiplier: 2, chance: 0.5 },
+      { name: "Rare", multiplier: 5, chance: 0.25 },
+      { name: "Epic", multiplier: 20, chance: 0.125 },
+      { name: "Legendary", multiplier: 100, chance: 0.0625 },
+      { name: "Mythical", multiplier: 500, chance: 0.03125 },
+      { name: "Ascended", multiplier: 1000, chance: 0.015625 },
+      { name: "Transcendent", multiplier: 5000, chance: 0.0078125 },
+      { name: "Divine", multiplier: 10000, chance: 0.00390625 },
+      { name: "Omnificent", multiplier: 500000, chance: 0.001953125 }
     ];
     const molds = ["Katana", "Longsword", "Dagger", "Broadsword", "Rapier"];
     const qualities = ["Poor", "Fine", "Pristine", "Masterwork"];
@@ -206,11 +206,11 @@
     }
 
     function weightedRandom(list, luckLevel) {
-      const total = list.reduce((sum, item) => sum + item.chance, 0) * luckLevel;
+      const total = list.reduce((sum, item) => sum + item.chance, 0);
       let random = Math.random() * total;
       for (const item of list) {
-        if (random < item.chance) return item;
-        random -= item.chance;
+        if (random < item.chance / Math.pow(1.2, luckLevel - 1)) return item;
+        random -= item.chance / Math.pow(1.2, luckLevel - 1);
       }
       return list[0];
     }
@@ -252,12 +252,12 @@
     }
 
     function upgradeLuck() {
-      const cost = 100 * luckLevel;
+      const cost = Math.floor(100 * Math.pow(1.2, luckLevel - 1));
       if (gold < cost) return alert("Not enough gold to upgrade luck!");
       gold -= cost;
       luckLevel++;
       updateGold();
-      alert(`Luck upgraded to level ${luckLevel}!`);
+      displayMessage(`Luck upgraded to level ${luckLevel}!`);
     }
 
     function displayMessage(message) {
