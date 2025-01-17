@@ -249,12 +249,12 @@
       if (!currentSword) return (container.innerHTML = "No sword created yet!");
       container.innerHTML = `
         <div class="sword-ui">
+          <p>Next Rarity: ${getNextRarityName(currentSword.rarity)}</p>
           <p>Name: ${currentSword.name}</p>
           <p>Value: ${currentSword.value}</p>
           <p>Rarity: ${currentSword.rarity.name}</p>
           <p>Mold: ${currentSword.mold}</p>
           <p>Quality: ${currentSword.quality}</p>
-          <p>Next Rarity: ${getNextRarityName(currentSword.rarity)}</p>
         </div>
       `;
     }
