@@ -70,9 +70,39 @@
       background: #333;
       border-radius: 10px;
       display: inline-block;
+      position: relative; /* Relative positioning for child elements */
+      width: 200px;
+      height: 400px;
+      border: 2px solid #fff;
     }
-    .sword-ui p {
-      margin: 5px 0;
+    .sword-ui .sword {
+      width: 80%;
+      height: 60%;
+      background: url('sword.png') no-repeat center center; /* Placeholder for sword image */
+      background-size: contain;
+      position: absolute;
+      top: 20%; /* Adjusted to center the sword image */
+      left: 10%;
+    }
+    .sword-ui .info {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+    }
+    .sword-ui .rarity-quality {
+      top: 5px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .sword-ui .mold {
+      bottom: 40px;
+      font-size: 12px;
+    }
+    .sword-ui .value {
+      bottom: 10px;
+      font-size: 12px;
+      right: 10px;
+      position: absolute;
     }
     .message {
       color: #0f0;
