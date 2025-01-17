@@ -116,12 +116,16 @@
 
   <script>
     const rarities = [
-      { name: "Common", multiplier: 1, chance: 500000 },
-      { name: "Uncommon", multiplier: 2, chance: 100000 },
-      { name: "Rare", multiplier: 5, chance: 50000 },
-      { name: "Epic", multiplier: 20, chance: 10000 },
-      { name: "Legendary", multiplier: 100, chance: 1000 },
-      { name: "Omnificent", multiplier: 500000, chance: 1 }
+      { name: "Common", multiplier: 1, chance: 1 },
+      { name: "Uncommon", multiplier: 2, chance: 0.5 },
+      { name: "Rare", multiplier: 5, chance: 0.25 },
+      { name: "Epic", multiplier: 20, chance: 0.125 },
+      { name: "Legendary", multiplier: 100, chance: 0.0625 },
+      { name: "Mythical", multiplier: 500, chance: 0.03125 },
+      { name: "Ascended", multiplier: 1000, chance: 0.015625 },
+      { name: "Transcendent", multiplier: 5000, chance: 0.0078125 },
+      { name: "Divine", multiplier: 10000, chance: 0.00390625 },
+      { name: "Omnificent", multiplier: 500000, chance: 0.001953125 }
     ];
     const molds = ["Katana", "Longsword", "Dagger", "Broadsword", "Rapier"];
     const qualities = ["Poor", "Fine", "Pristine", "Masterwork"];
@@ -135,7 +139,7 @@
       const rarity = weightedRandom(rarities, luckLevel);
       const mold = molds[Math.floor(Math.random() * molds.length)];
       const quality = qualities[Math.floor(Math.random() * qualities.length)];
-      const value = Math.floor(Math.random() * 100) + 1 * rarity.multiplier;
+      const value = Math.floor(Math.random() * 100) + rarity.multiplier * 10;
 
       currentSword = {
         name: `${rarity.name} ${mold}`,
