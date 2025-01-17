@@ -172,7 +172,7 @@
       let upgraded = false;
 
       const newRarity = weightedRandom(rarities, luckLevel);
-      if (newRarity.multiplier > currentSword.rarity.multiplier) {
+      if (rarities.indexOf(newRarity) > rarities.indexOf(currentSword.rarity)) {
         currentSword.rarity = newRarity;
         currentSword.value += newRarity.multiplier * 10;
         upgraded = true;
@@ -229,12 +229,11 @@
 
     function weightedRandom(list, luckLevel) {
       let total = list.reduce((sum, item) => sum + item.baseChance, 0);
-      total *= Math.pow(1.2, luckLevel - 1);
-
       let random = Math.random() * total;
       for (const item of list) {
-        if (random < item.baseChance / Math.pow(1.2, luckLevel - 1)) return item;
-        random -= item.baseChance / Math.pow(1.2, luckLevel - 1);
+        const adjustedChance = item.baseChance * Math.pow(1.2, luckLevel - 1);
+        if (random < adjustedChance) return item;
+        random -= adjustedChance;
       }
       return list[0];
     }
