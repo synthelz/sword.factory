@@ -109,7 +109,7 @@ function upgradeSword(attribute) {
 
 function sellSword() {
   if (!currentSword) return alert("Produce a sword first!");
-  cash += currentSword.value;
+  cash += currentSword.value; // Ensure cash is updated with the sword value
   inventory = inventory.filter((sword) => sword !== currentSword);
   currentSword = null;
   document.getElementById("sword-container").innerHTML = "No sword created yet!";
