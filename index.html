@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2D Sword Factory Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background-color: #222;
+      color: #fff;
+    }
+    .container {
+      padding: 20px;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      background: #444;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background: #666;
+    }
+    .sword {
+      margin: 10px auto;
+      padding: 10px;
+      border: 2px solid #fff;
+      width: 200px;
+      text-align: center;
+      border-radius: 10px;
+    }
+    .sword .name {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .sword .stats {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Sword Factory Game</h1>
+    <p>Produce, upgrade, and sell swords to earn gold!</p>
+    <button onclick="produceSword()">Produce Sword</button>
+    <button onclick="upgradeSword()">Upgrade Sword</button>
+    <button onclick="sellSword()">Sell Sword</button>
+    <div id="sword-container"></div>
+    <div id="gold">Gold: 0</div>
+  </div>
+
+  <script>
+    const rarities = ["Common", "Uncommon", "Rare", "Epic", "Legendary"];
+    const molds = ["Katana", "Longsword", "Dagger", "Broadsword", "Rapier"];
+    const qualities = ["Poor", "Fine", "Pristine", "Masterwork"];
+    let gold = 0;
+    let currentSword = null;
+
+    // Function to generate a random sword
+    function produceSword() {
+      const rarity = rarities[Math.floor(Math.random() * rarities.length)];
+      const mold = molds[Math.floor(Math.random() * molds.length)];
+      const quality = qualities[Math.floor(Math.random() * qualities.length)];
+      const value = Math.floor(Math.random() * 100) + 1;
+
+      currentSword = {
+        name: `${rarity} ${mold}`,
+        rarity,
+        mold,
+        quality,
+        value,
+        upgrades: 0,
+      };
+
+      displaySword();
+    }
+
+    // Function to display the sword
+    function displaySword() {
+      const container = document.getElementById("sword-container");
+      if (!currentSword) return (container.innerHTML = "No sword created yet!");
+
+      container.innerHTML = `
+        <div class="sword">
+          <div class="name">${currentSword.name}</div>
+          <div class="stats">
+            <p>Rarity: ${currentSword.rarity}</p>
+            <p>Mold: ${currentSword.mold}</p>
+            <p>Quality: ${currentSword.quality}</p>
+            <p>Value: ${currentSword.value} gold</p>
+            <p>Upgrades: ${currentSword.upgrades}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Function to upgrade the sword
+    function upgradeSword() {
+      if (!currentSword) {
+        alert("You need to produce a sword first!");
+        return;
+      }
+      const upgradeCost = 10 + currentSword.upgrades * 5;
+      if (gold < upgradeCost) {
+        alert(`Not enough gold! You need ${upgradeCost} gold to upgrade.`);
+        return;
+      }
+
+      gold -= upgradeCost;
+      currentSword.upgrades++;
+      currentSword.value += Math.floor(Math.random() * 20) + 10;
+      displaySword();
+      updateGold();
+    }
+
+    // Function to sell the sword
+    function sellSword() {
+      if (!currentSword) {
+        alert("You need to produce a sword first!");
+        return;
+      }
+
+      gold += currentSword.value;
+      currentSword = null;
+      document.getElementById("sword-container").innerHTML = "No sword created yet!";
+      updateGold();
+    }
+
+    // Function to update the gold display
+    function updateGold() {
+      document.getElementById("gold").innerText = `Gold: ${gold}`;
+    }
+  </script>
+</body>
+</html>
