@@ -240,6 +240,19 @@ function loadData() {
   }
 }
 
+// Reset save data
+function resetData() {
+  localStorage.removeItem('swordFactoryData');
+  cash = 0;
+  inventory = [];
+  currentSword = null;
+  luckLevel = 0;
+  updateCash();
+  updateInventory();
+  displaySword();
+  displayMessage("Save data reset successfully!");
+}
+
 // Export data to a file
 function exportData() {
   const data = localStorage.getItem('swordFactoryData');
