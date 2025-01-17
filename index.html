@@ -140,13 +140,24 @@
 
     function upgradeSword() {
       if (!currentSword) return alert("Produce a sword first!");
-      const cost = 10 + currentSword.upgrades * 5;
-      if (gold < cost) return alert("Not enough gold!");
-      gold -= cost;
+
+      // Remove gold cost for upgrading
+      // const cost = 10 + currentSword.upgrades * 5;
+      // if (gold < cost) return alert("Not enough gold!");
+      // gold -= cost;
+
       currentSword.upgrades++;
       currentSword.value += Math.floor(Math.random() * 20) + 10;
+      
+      // Update sword's properties
+      currentSword.rarity = weightedRandom(rarities).name;
+      currentSword.mold = molds[Math.floor(Math.random() * molds.length)];
+      currentSword.quality = qualities[Math.floor(Math.random() * qualities.length)];
+      currentSword.name = `${currentSword.rarity} ${currentSword.mold}`;
+
       displaySword();
       updateGold();
+      updateInventory();
     }
 
     function sellSword() {
@@ -187,6 +198,9 @@
         <div>
           <p>${currentSword.name}</p>
           <p>Value: ${currentSword.value}</p>
+          <p>Rarity: ${currentSword.rarity}</p>
+          <p>Mold: ${currentSword.mold}</p>
+          <p>Quality: ${currentSword.quality}</p>
           <p>Upgrades: ${currentSword.upgrades}</p>
         </div>
       `;
@@ -204,6 +218,9 @@
         <div class="sword-item">
           <p>${sword.name}</p>
           <p>Value: ${sword.value}</p>
+          <p>Rarity: ${sword.rarity}</p>
+          <p>Mold: ${sword.mold}</p>
+          <p>Quality: ${sword.quality}</p>
         </div>
       `
         )
