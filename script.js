@@ -110,11 +110,21 @@ function toggleAuto(type) {
 }
 
 function weightedRandom(list) {
-  const totalWeight = list.reduce((sum, item) => sum + item.baseChance, 0);
-  let random = Math.random() * totalWeight;
+  // Calculate total cumulative weight
+  let totalWeight = 0;
   for (const item of list) {
-    if (random < item.baseChance) return item;
-    random -= item.baseChance;
+    totalWeight += item.baseChance;
+    item.cumulativeWeight = totalWeight;
+  }
+
+  // Generate a random number between 0 and totalWeight
+  const random = Math.random() * totalWeight;
+
+  // Find the corresponding item
+  for (const item of list) {
+    if (random < item.cumulativeWeight) {
+      return item;
+    }
   }
   return list[0];
 }
