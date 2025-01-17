@@ -105,6 +105,7 @@
 
     <div id="gold">Gold: 0</div>
     <div id="sword-container">No sword created yet!</div>
+    <div id="next-upgrade-cost">Next Luck Upgrade Cost: 100 Gold</div>
     <div id="auto-upgrades">
       <button class="toggle" id="auto-upgrade-molds" onclick="toggleAuto('molds')">Auto Upgrade Molds</button>
       <button class="toggle" id="auto-upgrade-qualities" onclick="toggleAuto('qualities')">Auto Upgrade Qualities</button>
@@ -171,15 +172,20 @@
       currentSword.upgrades++;
       currentSword.value += Math.floor(Math.random() * 20) + 10 * Math.pow(2, currentSword.upgrades);
 
-      // Ensure the sword's rarity does not downgrade
+      // Ensure the sword's rarity, mold, and quality do not downgrade
       const newRarity = weightedRandom(rarities, luckLevel);
       if (newRarity.multiplier >= currentSword.rarity.multiplier) {
         currentSword.rarity = newRarity;
       }
+      const newMold = molds[Math.floor(Math.random() * molds.length)];
+      if (molds.indexOf(newMold) >= molds.indexOf(currentSword.mold)) {
+        currentSword.mold = newMold;
+      }
+      const newQuality = qualities[Math.floor(Math.random() * qualities.length)];
+      if (qualities.indexOf(newQuality) >= qualities.indexOf(currentSword.quality)) {
+        currentSword.quality = newQuality;
+      }
 
-      // Update sword's properties
-      currentSword.mold = molds[Math.floor(Math.random() * molds.length)];
-      currentSword.quality = qualities[Math.floor(Math.random() * qualities.length)];
       currentSword.name = `${currentSword.rarity.name} ${currentSword.mold}`;
 
       displaySword();
@@ -237,6 +243,7 @@
 
     function updateGold() {
       document.getElementById("gold").innerText = `Gold: ${gold}`;
+      document.getElementById("next-upgrade-cost").innerText = `Next Luck Upgrade Cost: ${Math.floor(100 * Math.pow(1.2, luckLevel - 1))} Gold`;
     }
 
     function updateInventory() {
