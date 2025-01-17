@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sword Factory Remade v1.01</title>
+  <title>Advanced Sword Factory Game</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -199,7 +199,7 @@
     }
 
     function weightedRandom(list, luckLevel) {
-      const total = list.reduce((sum, item) => sum + item.chance, 0) / luckLevel;
+      const total = list.reduce((sum, item) => sum + item.chance, 0) * luckLevel;
       let random = Math.random() * total;
       for (const item of list) {
         if (random < item.chance) return item;
