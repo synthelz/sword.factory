@@ -151,15 +151,15 @@
     function produceSword() {
       const rarity = weightedRandom(rarities, luckLevel);
       const mold = molds[Math.floor(Math.random() * molds.length)];
-      const quality = qualities[Math.floor(Math.random() * qualities.length)];
+      const quality = weightedRandom(qualities, luckLevel);
       const value = Math.floor(Math.random() * 100) + rarity.multiplier * 10;
 
       currentSword = {
         name: `${rarity.name} ${mold}`,
         rarity: rarity,
-        quality,
-        mold,
-        value,
+        quality: quality,
+        mold: mold,
+        value: value,
       };
       inventory.push(currentSword);
       displaySword();
@@ -203,11 +203,6 @@
         }
       }
 
-      if (!upgraded) {
-        displayMessage("No upgrades available!");
-        return;
-      }
-
       currentSword.name = `${currentSword.rarity.name} ${currentSword.mold}`;
       
       displaySword();
@@ -242,7 +237,7 @@
       let total = list.reduce((sum, item) => sum + item.baseChance, 0);
       let random = Math.random() * total;
       for (const item of list) {
-        const adjustedChance = item.baseChance / Math.pow(2, luckLevel - 1);
+        const adjustedChance = item.baseChance / Math.pow(2, luckLevel);
         if (random < adjustedChance) return item;
         random -= adjustedChance;
       }
