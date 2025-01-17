@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2D Sword Factory Game</title>
+  <title>Advanced Sword Factory Game</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
       background-color: #222;
       color: #fff;
+      margin: 0;
+      padding: 0;
+      text-align: center;
     }
     .container {
       padding: 20px;
@@ -29,115 +29,185 @@
     button:hover {
       background: #666;
     }
-    .sword {
-      margin: 10px auto;
-      padding: 10px;
+    .inventory {
+      display: none;
+      position: fixed;
+      top: 10%;
+      left: 10%;
+      width: 80%;
+      height: 70%;
+      background: #333;
       border: 2px solid #fff;
-      width: 200px;
-      text-align: center;
+      overflow-y: auto;
       border-radius: 10px;
+      padding: 20px;
+      z-index: 1000;
     }
-    .sword .name {
-      font-size: 20px;
-      font-weight: bold;
+    .inventory h2 {
+      margin: 0 0 10px 0;
     }
-    .sword .stats {
-      margin-top: 10px;
-      font-size: 14px;
+    .sword-item {
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #555;
+      border-radius: 5px;
+      text-align: left;
+    }
+    .inventory-close {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      background: #900;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .toggle {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 5px;
+      background: #444;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .toggle.active {
+      background: #0a0;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Sword Factory Game</h1>
-    <p>Produce, upgrade, and sell swords to earn gold!</p>
+    <h1>Advanced Sword Factory Game</h1>
+    <p>Produce, upgrade, and sell swords with advanced mechanics!</p>
     <button onclick="produceSword()">Produce Sword</button>
     <button onclick="upgradeSword()">Upgrade Sword</button>
     <button onclick="sellSword()">Sell Sword</button>
-    <div id="sword-container"></div>
+    <button onclick="toggleInventory()">View Inventory</button>
+
     <div id="gold">Gold: 0</div>
+    <div id="sword-container"></div>
+    <div id="auto-upgrades">
+      <button class="toggle" id="auto-upgrade-molds" onclick="toggleAuto('molds')">Auto Upgrade Molds</button>
+      <button class="toggle" id="auto-upgrade-qualities" onclick="toggleAuto('qualities')">Auto Upgrade Qualities</button>
+      <button class="toggle" id="auto-upgrade-rarities" onclick="toggleAuto('rarities')">Auto Upgrade Rarities</button>
+    </div>
+  </div>
+
+  <div class="inventory" id="inventory">
+    <button class="inventory-close" onclick="toggleInventory()">Close</button>
+    <h2>Sword Inventory</h2>
+    <div id="inventory-list"></div>
   </div>
 
   <script>
-    const rarities = ["Common", "Uncommon", "Rare", "Epic", "Legendary"];
+    const rarities = [
+      { name: "Common", multiplier: 1, chance: 500000 },
+      { name: "Uncommon", multiplier: 2, chance: 100000 },
+      { name: "Rare", multiplier: 5, chance: 50000 },
+      { name: "Epic", multiplier: 20, chance: 10000 },
+      { name: "Legendary", multiplier: 100, chance: 1000 },
+      { name: "Omnificent", multiplier: 500000, chance: 1 }
+    ];
     const molds = ["Katana", "Longsword", "Dagger", "Broadsword", "Rapier"];
     const qualities = ["Poor", "Fine", "Pristine", "Masterwork"];
     let gold = 0;
+    let inventory = [];
     let currentSword = null;
+    let autoUpgrades = { molds: false, qualities: false, rarities: false };
 
-    // Function to generate a random sword
     function produceSword() {
-      const rarity = rarities[Math.floor(Math.random() * rarities.length)];
+      const rarity = weightedRandom(rarities);
       const mold = molds[Math.floor(Math.random() * molds.length)];
       const quality = qualities[Math.floor(Math.random() * qualities.length)];
-      const value = Math.floor(Math.random() * 100) + 1;
+      const value = Math.floor(Math.random() * 100) + 1 * rarity.multiplier;
 
       currentSword = {
-        name: `${rarity} ${mold}`,
-        rarity,
-        mold,
+        name: `${rarity.name} ${mold}`,
+        rarity: rarity.name,
         quality,
+        mold,
         value,
         upgrades: 0,
       };
-
+      inventory.push(currentSword);
       displaySword();
+      updateInventory();
     }
 
-    // Function to display the sword
-    function displaySword() {
-      const container = document.getElementById("sword-container");
-      if (!currentSword) return (container.innerHTML = "No sword created yet!");
-
-      container.innerHTML = `
-        <div class="sword">
-          <div class="name">${currentSword.name}</div>
-          <div class="stats">
-            <p>Rarity: ${currentSword.rarity}</p>
-            <p>Mold: ${currentSword.mold}</p>
-            <p>Quality: ${currentSword.quality}</p>
-            <p>Value: ${currentSword.value} gold</p>
-            <p>Upgrades: ${currentSword.upgrades}</p>
-          </div>
-        </div>
-      `;
-    }
-
-    // Function to upgrade the sword
     function upgradeSword() {
-      if (!currentSword) {
-        alert("You need to produce a sword first!");
-        return;
-      }
-      const upgradeCost = 10 + currentSword.upgrades * 5;
-      if (gold < upgradeCost) {
-        alert(`Not enough gold! You need ${upgradeCost} gold to upgrade.`);
-        return;
-      }
-
-      gold -= upgradeCost;
+      if (!currentSword) return alert("Produce a sword first!");
+      const cost = 10 + currentSword.upgrades * 5;
+      if (gold < cost) return alert("Not enough gold!");
+      gold -= cost;
       currentSword.upgrades++;
       currentSword.value += Math.floor(Math.random() * 20) + 10;
       displaySword();
       updateGold();
     }
 
-    // Function to sell the sword
     function sellSword() {
-      if (!currentSword) {
-        alert("You need to produce a sword first!");
-        return;
-      }
-
+      if (!currentSword) return alert("Produce a sword first!");
       gold += currentSword.value;
+      inventory = inventory.filter((sword) => sword !== currentSword);
       currentSword = null;
       document.getElementById("sword-container").innerHTML = "No sword created yet!";
       updateGold();
+      updateInventory();
     }
 
-    // Function to update the gold display
+    function toggleInventory() {
+      const inventoryDiv = document.getElementById("inventory");
+      inventoryDiv.style.display = inventoryDiv.style.display === "block" ? "none" : "block";
+    }
+
+    function toggleAuto(type) {
+      autoUpgrades[type] = !autoUpgrades[type];
+      const button = document.getElementById(`auto-upgrade-${type}`);
+      button.classList.toggle("active", autoUpgrades[type]);
+    }
+
+    function weightedRandom(list) {
+      const total = list.reduce((sum, item) => sum + item.chance, 0);
+      let random = Math.random() * total;
+      for (const item of list) {
+        if (random < item.chance) return item;
+        random -= item.chance;
+      }
+      return list[0];
+    }
+
+    function displaySword() {
+      const container = document.getElementById("sword-container");
+      if (!currentSword) return (container.innerHTML = "No sword created yet!");
+      container.innerHTML = `
+        <div>
+          <p>${currentSword.name}</p>
+          <p>Value: ${currentSword.value}</p>
+          <p>Upgrades: ${currentSword.upgrades}</p>
+        </div>
+      `;
+    }
+
     function updateGold() {
       document.getElementById("gold").innerText = `Gold: ${gold}`;
+    }
+
+    function updateInventory() {
+      const list = document.getElementById("inventory-list");
+      list.innerHTML = inventory
+        .map(
+          (sword) => `
+        <div class="sword-item">
+          <p>${sword.name}</p>
+          <p>Value: ${sword.value}</p>
+        </div>
+      `
+        )
+        .join("");
     }
   </script>
 </body>
