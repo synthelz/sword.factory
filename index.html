@@ -131,10 +131,15 @@
       { name: "Ascended", multiplier: 1000, baseChance: 0.015625 },
       { name: "Transcendent", multiplier: 5000, baseChance: 0.0078125 },
       { name: "Divine", multiplier: 10000, baseChance: 0.00390625 },
-      { name: "Omnificent", multiplier: 500000, baseChance: 0.001953125 }
+      { name: "Omnificent", multiplier: 500000, baseChance: 0.001953125 },
+      { name: "Celestial", multiplier: 1000000, baseChance: 0.0009765625 },
+      { name: "Ethereal", multiplier: 5000000, baseChance: 0.00048828125 },
+      { name: "Void", multiplier: 10000000, baseChance: 0.000244140625 },
+      { name: "Quantum", multiplier: 50000000, baseChance: 0.0001220703125 },
+      { name: "Cosmic", multiplier: 100000000, baseChance: 0.00006103515625 }
     ];
-    const molds = ["Katana", "Longsword", "Dagger", "Broadsword", "Rapier"];
-    const qualities = ["Poor", "Fine", "Pristine", "Masterwork"];
+    const molds = ["Katana", "Longsword", "Dagger", "Broadsword", "Rapier", "Scimitar", "Claymore", "Gladius"];
+    const qualities = ["Poor", "Fine", "Pristine", "Masterwork", "Exquisite", "Flawless"];
     let gold = 0;
     let inventory = [];
     let currentSword = null;
@@ -185,7 +190,7 @@
         upgraded = true;
       }
 
-      const newQuality = qualities[Math.floor(Math.random() * qualities.length)];
+      const newQuality = weightedRandom(qualities, luckLevel);
       if (qualities.indexOf(newQuality) > qualities.indexOf(currentSword.quality)) {
         currentSword.quality = newQuality;
         currentSword.value += 30;
@@ -231,7 +236,7 @@
       let total = list.reduce((sum, item) => sum + item.baseChance, 0);
       let random = Math.random() * total;
       for (const item of list) {
-        const adjustedChance = item.baseChance * Math.pow(1.2, luckLevel - 1);
+        const adjustedChance = item.baseChance / Math.pow(2, luckLevel - 1);
         if (random < adjustedChance) return item;
         random -= adjustedChance;
       }
@@ -254,7 +259,7 @@
 
     function updateGold() {
       document.getElementById("gold").innerText = `Gold: ${gold}`;
-      document.getElementById("next-upgrade-cost").innerText = `Next Luck Upgrade Cost: ${Math.floor(100 * Math.pow(1.2, luckLevel - 1))} Gold`;
+      document.getElementById("next-upgrade-cost").innerText = `Next Luck Upgrade Cost: ${Math.floor(100 * Math.pow(2, luckLevel - 1))} Gold`;
     }
 
     function updateInventory() {
@@ -275,7 +280,7 @@
     }
 
     function upgradeLuck() {
-      const cost = Math.floor(100 * Math.pow(1.2, luckLevel - 1));
+      const cost = Math.floor(100 * Math.pow(2, luckLevel - 1));
       if (gold < cost) return alert("Not enough gold to upgrade luck!");
       gold -= cost;
       luckLevel++;
