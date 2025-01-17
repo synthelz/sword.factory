@@ -122,16 +122,16 @@
 
   <script>
     const rarities = [
-      { name: "Common", multiplier: 1, chance: 1 },
-      { name: "Uncommon", multiplier: 2, chance: 0.5 },
-      { name: "Rare", multiplier: 5, chance: 0.25 },
-      { name: "Epic", multiplier: 20, chance: 0.125 },
-      { name: "Legendary", multiplier: 100, chance: 0.0625 },
-      { name: "Mythical", multiplier: 500, chance: 0.03125 },
-      { name: "Ascended", multiplier: 1000, chance: 0.015625 },
-      { name: "Transcendent", multiplier: 5000, chance: 0.0078125 },
-      { name: "Divine", multiplier: 10000, chance: 0.00390625 },
-      { name: "Omnificent", multiplier: 500000, chance: 0.001953125 }
+      { name: "Common", multiplier: 1, baseChance: 1 },
+      { name: "Uncommon", multiplier: 2, baseChance: 0.5 },
+      { name: "Rare", multiplier: 5, baseChance: 0.25 },
+      { name: "Epic", multiplier: 20, baseChance: 0.125 },
+      { name: "Legendary", multiplier: 100, baseChance: 0.0625 },
+      { name: "Mythical", multiplier: 500, baseChance: 0.03125 },
+      { name: "Ascended", multiplier: 1000, baseChance: 0.015625 },
+      { name: "Transcendent", multiplier: 5000, baseChance: 0.0078125 },
+      { name: "Divine", multiplier: 10000, baseChance: 0.00390625 },
+      { name: "Omnificent", multiplier: 500000, baseChance: 0.001953125 }
     ];
     const molds = ["Katana", "Longsword", "Dagger", "Broadsword", "Rapier"];
     const qualities = ["Poor", "Fine", "Pristine", "Masterwork"];
@@ -153,7 +153,6 @@
         quality,
         mold,
         value,
-        upgrades: 0,
       };
       inventory.push(currentSword);
       displaySword();
@@ -169,23 +168,33 @@
         return;
       }
 
-      currentSword.upgrades++;
-
       // Ensure the sword's rarity, mold, and quality do not downgrade and only increase the value if improved
+      let upgraded = false;
+
       const newRarity = weightedRandom(rarities, luckLevel);
       if (newRarity.multiplier > currentSword.rarity.multiplier) {
         currentSword.rarity = newRarity;
         currentSword.value += newRarity.multiplier * 10;
+        upgraded = true;
       }
+
       const newMold = molds[Math.floor(Math.random() * molds.length)];
       if (molds.indexOf(newMold) > molds.indexOf(currentSword.mold)) {
         currentSword.mold = newMold;
         currentSword.value += 20;
+        upgraded = true;
       }
+
       const newQuality = qualities[Math.floor(Math.random() * qualities.length)];
       if (qualities.indexOf(newQuality) > qualities.indexOf(currentSword.quality)) {
         currentSword.quality = newQuality;
         currentSword.value += 30;
+        upgraded = true;
+      }
+
+      if (!upgraded) {
+        displayMessage("No upgrades available!");
+        return;
       }
 
       currentSword.name = `${currentSword.rarity.name} ${currentSword.mold}`;
@@ -219,11 +228,13 @@
     }
 
     function weightedRandom(list, luckLevel) {
-      const total = list.reduce((sum, item) => sum + item.chance, 0);
+      let total = list.reduce((sum, item) => sum + item.baseChance, 0);
+      total *= Math.pow(1.2, luckLevel - 1);
+
       let random = Math.random() * total;
       for (const item of list) {
-        if (random < item.chance / Math.pow(1.2, luckLevel - 1)) return item;
-        random -= item.chance / Math.pow(1.2, luckLevel - 1);
+        if (random < item.baseChance / Math.pow(1.2, luckLevel - 1)) return item;
+        random -= item.baseChance / Math.pow(1.2, luckLevel - 1);
       }
       return list[0];
     }
@@ -238,7 +249,6 @@
           <p>Rarity: ${currentSword.rarity.name}</p>
           <p>Mold: ${currentSword.mold}</p>
           <p>Quality: ${currentSword.quality}</p>
-          <p>Upgrades: ${currentSword.upgrades}</p>
         </div>
       `;
     }
