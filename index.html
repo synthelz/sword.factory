@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sword Factory Remade V1.01</title>
+  <title>Sword Factory Remade v1.01</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -100,7 +100,7 @@
     <button onclick="upgradeLuck()">Upgrade Luck</button>
 
     <div id="gold">Gold: 0</div>
-    <div id="sword-container"></div>
+    <div id="sword-container">No sword created yet!</div>
     <div id="auto-upgrades">
       <button class="toggle" id="auto-upgrade-molds" onclick="toggleAuto('molds')">Auto Upgrade Molds</button>
       <button class="toggle" id="auto-upgrade-qualities" onclick="toggleAuto('qualities')">Auto Upgrade Qualities</button>
@@ -158,7 +158,7 @@
       if (!currentSword) return alert("Produce a sword first!");
 
       // RNG for upgrade success (1/4 chance)
-      if (Math.random() > 0.25) {
+      if (Math.random() > 0.75) {
         alert("Upgrade failed!");
         return;
       }
