@@ -77,6 +77,16 @@
     .toggle.active {
       background: #0a0;
     }
+    .sword-ui {
+      margin-top: 20px;
+      padding: 20px;
+      background: #333;
+      border-radius: 10px;
+      display: inline-block;
+    }
+    .sword-ui p {
+      margin: 5px 0;
+    }
   </style>
 </head>
 <body>
@@ -87,6 +97,7 @@
     <button onclick="upgradeSword()">Upgrade Sword</button>
     <button onclick="sellSword()">Sell Sword</button>
     <button onclick="toggleInventory()">View Inventory</button>
+    <button onclick="upgradeLuck()">Upgrade Luck</button>
 
     <div id="gold">Gold: 0</div>
     <div id="sword-container"></div>
@@ -118,9 +129,10 @@
     let inventory = [];
     let currentSword = null;
     let autoUpgrades = { molds: false, qualities: false, rarities: false };
+    let luckLevel = 1;
 
     function produceSword() {
-      const rarity = weightedRandom(rarities);
+      const rarity = weightedRandom(rarities, luckLevel);
       const mold = molds[Math.floor(Math.random() * molds.length)];
       const quality = qualities[Math.floor(Math.random() * qualities.length)];
       const value = Math.floor(Math.random() * 100) + 1 * rarity.multiplier;
@@ -141,16 +153,17 @@
     function upgradeSword() {
       if (!currentSword) return alert("Produce a sword first!");
 
-      // Remove gold cost for upgrading
-      // const cost = 10 + currentSword.upgrades * 5;
-      // if (gold < cost) return alert("Not enough gold!");
-      // gold -= cost;
+      // RNG for upgrade success (1/4 chance)
+      if (Math.random() > 0.25) {
+        alert("Upgrade failed!");
+        return;
+      }
 
       currentSword.upgrades++;
-      currentSword.value += Math.floor(Math.random() * 20) + 10;
-      
+      currentSword.value += Math.floor(Math.random() * 20) + 10 * Math.pow(2, currentSword.upgrades);
+
       // Update sword's properties
-      currentSword.rarity = weightedRandom(rarities).name;
+      currentSword.rarity = weightedRandom(rarities, luckLevel).name;
       currentSword.mold = molds[Math.floor(Math.random() * molds.length)];
       currentSword.quality = qualities[Math.floor(Math.random() * qualities.length)];
       currentSword.name = `${currentSword.rarity} ${currentSword.mold}`;
@@ -181,8 +194,8 @@
       button.classList.toggle("active", autoUpgrades[type]);
     }
 
-    function weightedRandom(list) {
-      const total = list.reduce((sum, item) => sum + item.chance, 0);
+    function weightedRandom(list, luckLevel) {
+      const total = list.reduce((sum, item) => sum + item.chance, 0) / luckLevel;
       let random = Math.random() * total;
       for (const item of list) {
         if (random < item.chance) return item;
@@ -195,8 +208,8 @@
       const container = document.getElementById("sword-container");
       if (!currentSword) return (container.innerHTML = "No sword created yet!");
       container.innerHTML = `
-        <div>
-          <p>${currentSword.name}</p>
+        <div class="sword-ui">
+          <p>Name: ${currentSword.name}</p>
           <p>Value: ${currentSword.value}</p>
           <p>Rarity: ${currentSword.rarity}</p>
           <p>Mold: ${currentSword.mold}</p>
@@ -225,6 +238,15 @@
       `
         )
         .join("");
+    }
+
+    function upgradeLuck() {
+      const cost = 100 * luckLevel;
+      if (gold < cost) return alert("Not enough gold to upgrade luck!");
+      gold -= cost;
+      luckLevel++;
+      updateGold();
+      alert(`Luck upgraded to level ${luckLevel}!`);
     }
   </script>
 </body>
