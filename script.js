@@ -36,7 +36,6 @@ const qualities = [
 let gold = 0;
 let inventory = [];
 let currentSword = null;
-let autoUpgrades = { molds: false, qualities: false, rarities: false };
 let luckLevel = 1;
 const autoSaveInterval = 30000; // Auto-save every 30 seconds
 
@@ -123,13 +122,6 @@ function sellSword() {
 function toggleInventory() {
   const inventoryDiv = document.getElementById("inventory");
   inventoryDiv.style.display = inventoryDiv.style.display === "block" ? "none" : "block";
-}
-
-function toggleAuto(type) {
-  autoUpgrades[type] = !autoUpgrades[type];
-  const button = document.getElementById(`auto-upgrade-${type}`);
-  button.classList.toggle("active", autoUpgrades[type]);
-  saveData();
 }
 
 function weightedRandom(list) {
@@ -220,7 +212,6 @@ function saveData() {
   const data = {
     gold,
     inventory,
-    autoUpgrades,
     luckLevel,
     currentSword
   };
@@ -234,7 +225,6 @@ function loadData() {
     const data = JSON.parse(savedData);
     gold = data.gold;
     inventory = data.inventory;
-    autoUpgrades = data.autoUpgrades;
     luckLevel = data.luckLevel;
     currentSword = data.currentSword;
     updateGold();
