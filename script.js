@@ -1,20 +1,21 @@
 const rarities = [
-  { name: "Common", multiplier: 1, baseChance: 1 },
-  { name: "Uncommon", multiplier: 2, baseChance: 0.5 },
-  { name: "Rare", multiplier: 5, baseChance: 0.25 },
-  { name: "Epic", multiplier: 20, baseChance: 0.125 },
-  { name: "Legendary", multiplier: 100, baseChance: 0.0625 },
-  { name: "Mythical", multiplier: 500, baseChance: 0.03125 },
-  { name: "Ascended", multiplier: 1000, baseChance: 0.015625 },
-  { name: "Transcendent", multiplier: 5000, baseChance: 0.0078125 },
-  { name: "Divine", multiplier: 10000, baseChance: 0.00390625 },
-  { name: "Omnificent", multiplier: 500000, baseChance: 0.001953125 },
-  { name: "Celestial", multiplier: 1000000, baseChance: 0.0009765625 },
-  { name: "Ethereal", multiplier: 5000000, baseChance: 0.00048828125 },
-  { name: "Void", multiplier: 10000000, baseChance: 0.000244140625 },
-  { name: "Quantum", multiplier: 50000000, baseChance: 0.0001220703125 },
-  { name: "Cosmic", multiplier: 100000000, baseChance: 0.00006103515625 }
+  { name: "Common", multiplier: 1, baseChance: 100000 },
+  { name: "Uncommon", multiplier: 2, baseChance: 50000 },
+  { name: "Rare", multiplier: 5, baseChance: 25000 },
+  { name: "Epic", multiplier: 20, baseChance: 12500 },
+  { name: "Legendary", multiplier: 100, baseChance: 6250 },
+  { name: "Mythical", multiplier: 500, baseChance: 3125 },
+  { name: "Ascended", multiplier: 1000, baseChance: 1562.5 },
+  { name: "Transcendent", multiplier: 5000, baseChance: 781.25 },
+  { name: "Divine", multiplier: 10000, baseChance: 390.625 },
+  { name: "Omnificent", multiplier: 500000, baseChance: 195.3125 },
+  { name: "Celestial", multiplier: 1000000, baseChance: 97.65625 },
+  { name: "Ethereal", multiplier: 5000000, baseChance: 48.828125 },
+  { name: "Void", multiplier: 10000000, baseChance: 24.4140625 },
+  { name: "Quantum", multiplier: 50000000, baseChance: 12.20703125 },
+  { name: "Cosmic", multiplier: 100000000, baseChance: 6.103515625 }
 ];
+
 const molds = ["Katana", "Longsword", "Dagger", "Broadsword", "Rapier", "Scimitar", "Claymore", "Gladius"];
 const qualities = ["Poor", "Fine", "Pristine", "Masterwork", "Exquisite", "Flawless"];
 let gold = 0;
@@ -24,9 +25,9 @@ let autoUpgrades = { molds: false, qualities: false, rarities: false };
 let luckLevel = 1;
 
 function produceSword() {
-  const rarity = weightedRandom(rarities, luckLevel);
+  const rarity = weightedRandom(rarities);
   const mold = molds[Math.floor(Math.random() * molds.length)];
-  const quality = weightedRandom(qualities, luckLevel);
+  const quality = weightedRandom(qualities);
   const value = Math.floor(Math.random() * 100) + rarity.multiplier * 10;
 
   currentSword = {
@@ -108,14 +109,12 @@ function toggleAuto(type) {
   button.classList.toggle("active", autoUpgrades[type]);
 }
 
-function weightedRandom(list, luckLevel) {
-  // Calculate the adjusted chances based on luck level
-  const totalWeight = list.reduce((sum, item) => sum + item.baseChance / Math.pow(2, luckLevel), 0);
+function weightedRandom(list) {
+  const totalWeight = list.reduce((sum, item) => sum + item.baseChance, 0);
   let random = Math.random() * totalWeight;
   for (const item of list) {
-    const adjustedChance = item.baseChance / Math.pow(2, luckLevel);
-    if (random < adjustedChance) return item;
-    random -= adjustedChance;
+    if (random < item.baseChance) return item;
+    random -= item.baseChance;
   }
   return list[0];
 }
