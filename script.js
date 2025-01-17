@@ -33,7 +33,7 @@ const qualities = [
   { name: "Flawless", baseChance: 1 / 4096 }
 ];
 
-let gold = 0;
+let cash = 0;
 let inventory = [];
 let currentSword = null;
 let luckLevel = 1;
@@ -101,7 +101,7 @@ function upgradeSword(attribute) {
   currentSword.name = `${currentSword.rarity.name} ${currentSword.mold}`;
   
   displaySword();
-  updateGold();
+  updateCash();
   updateInventory();
   saveData();
   displayMessage(upgraded ? "Sword upgraded successfully!" : "Upgrade failed!");
@@ -109,11 +109,11 @@ function upgradeSword(attribute) {
 
 function sellSword() {
   if (!currentSword) return alert("Produce a sword first!");
-  gold += currentSword.value;
+  cash += currentSword.value;
   inventory = inventory.filter((sword) => sword !== currentSword);
   currentSword = null;
   document.getElementById("sword-container").innerHTML = "No sword created yet!";
-  updateGold();
+  updateCash();
   updateInventory();
   saveData();
   displayMessage("Sword sold successfully!");
@@ -167,9 +167,9 @@ function getNextRarityName(currentRarity) {
   return "Maxed";
 }
 
-function updateGold() {
-  document.getElementById("gold").innerText = `Gold: ${gold}`;
-  document.getElementById("next-upgrade-cost").innerText = `Next Luck Upgrade Cost: ${Math.floor(100 * Math.pow(2, luckLevel))} Gold`;
+function updateCash() {
+  document.getElementById("cash").innerText = `Cash: ${cash}`;
+  document.getElementById("next-upgrade-cost").innerText = `Next Luck Upgrade Cost: ${Math.floor(100 * Math.pow(2, luckLevel))} Cash`;
 }
 
 function updateInventory() {
@@ -191,10 +191,10 @@ function updateInventory() {
 
 function upgradeLuck() {
   const cost = Math.floor(100 * Math.pow(2, luckLevel));
-  if (gold < cost) return alert("Not enough gold to upgrade luck!");
-  gold -= cost;
+  if (cash < cost) return alert("Not enough cash to upgrade luck!");
+  cash -= cost;
   luckLevel++;
-  updateGold();
+  updateCash();
   saveData();
   displayMessage(`Luck upgraded to level ${luckLevel}!`);
 }
@@ -210,7 +210,7 @@ function displayMessage(message) {
 // Save data to local storage
 function saveData() {
   const data = {
-    gold,
+    cash,
     inventory,
     luckLevel,
     currentSword
@@ -223,11 +223,11 @@ function loadData() {
   const savedData = localStorage.getItem('swordFactoryData');
   if (savedData) {
     const data = JSON.parse(savedData);
-    gold = data.gold;
+    cash = data.cash;
     inventory = data.inventory;
     luckLevel = data.luckLevel;
     currentSword = data.currentSword;
-    updateGold();
+    updateCash();
     updateInventory();
     displaySword();
   }
