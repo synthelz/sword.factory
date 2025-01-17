@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced Sword Factory Game</title>
+  <title>Sword Factory Remade</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -95,7 +95,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Advanced Sword Factory Game</h1>
+    <h1>Sword Factory Remade</h1>
     <p>Produce, upgrade, and sell swords with advanced mechanics!</p>
     <button onclick="produceSword()">Produce Sword</button>
     <button onclick="upgradeSword()">Upgrade Sword</button>
@@ -148,7 +148,7 @@
 
       currentSword = {
         name: `${rarity.name} ${mold}`,
-        rarity: rarity.name,
+        rarity: rarity,
         quality,
         mold,
         value,
@@ -171,11 +171,16 @@
       currentSword.upgrades++;
       currentSword.value += Math.floor(Math.random() * 20) + 10 * Math.pow(2, currentSword.upgrades);
 
+      // Ensure the sword's rarity does not downgrade
+      const newRarity = weightedRandom(rarities, luckLevel);
+      if (newRarity.multiplier >= currentSword.rarity.multiplier) {
+        currentSword.rarity = newRarity;
+      }
+
       // Update sword's properties
-      currentSword.rarity = weightedRandom(rarities, luckLevel).name;
       currentSword.mold = molds[Math.floor(Math.random() * molds.length)];
       currentSword.quality = qualities[Math.floor(Math.random() * qualities.length)];
-      currentSword.name = `${currentSword.rarity} ${currentSword.mold}`;
+      currentSword.name = `${currentSword.rarity.name} ${currentSword.mold}`;
 
       displaySword();
       updateGold();
@@ -222,7 +227,7 @@
         <div class="sword-ui">
           <p>Name: ${currentSword.name}</p>
           <p>Value: ${currentSword.value}</p>
-          <p>Rarity: ${currentSword.rarity}</p>
+          <p>Rarity: ${currentSword.rarity.name}</p>
           <p>Mold: ${currentSword.mold}</p>
           <p>Quality: ${currentSword.quality}</p>
           <p>Upgrades: ${currentSword.upgrades}</p>
@@ -242,7 +247,7 @@
         <div class="sword-item">
           <p>${sword.name}</p>
           <p>Value: ${sword.value}</p>
-          <p>Rarity: ${sword.rarity}</p>
+          <p>Rarity: ${sword.rarity.name}</p>
           <p>Mold: ${sword.mold}</p>
           <p>Quality: ${sword.quality}</p>
         </div>
