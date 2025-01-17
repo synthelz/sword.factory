@@ -156,12 +156,10 @@ function displaySword() {
   if (!currentSword) return (container.innerHTML = "No sword created yet!");
   container.innerHTML = `
     <div class="sword-ui">
-      <p>Next Rarity: ${getNextRarityName(currentSword.rarity)}</p>
-      <p>Name: ${currentSword.name}</p>
-      <p>Value: ${currentSword.value}</p>
-      <p>Rarity: ${currentSword.rarity.name}</p>
-      <p>Mold: ${currentSword.mold}</p>
-      <p>Quality: ${currentSword.quality.name}</p>
+      <div class="info rarity-quality">${currentSword.rarity.name}/${currentSword.quality.name}</div>
+      <div class="sword"></div>
+      <div class="info mold">${currentSword.mold}</div>
+      <div class="info value">${currentSword.value} Cash</div>
     </div>
   `;
 }
