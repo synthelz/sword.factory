@@ -104,7 +104,8 @@
     <button onclick="sellSword()">Sell Sword</button>
     <button onclick="toggleInventory()">View Inventory</button>
     <button onclick="upgradeLuck()">Upgrade Luck</button>
-
+    <button onclick="exportData()">Export Data</button>
+    <input type="file" onchange="importData(event)" />
     <div id="gold">Gold: 0</div>
     <div id="sword-container">No sword created yet!</div>
     <div id="next-upgrade-cost">Next Luck Upgrade Cost: 100 Gold</div>
