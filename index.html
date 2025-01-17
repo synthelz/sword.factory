@@ -91,21 +91,36 @@
       color: #0f0;
       margin-top: 10px;
     }
+    .category {
+      margin: 20px 0;
+    }
+    .category h2 {
+      margin: 10px 0;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Sword Factory Remade</h1>
     <p>Produce, upgrade, and sell swords with advanced mechanics!</p>
-    <button onclick="produceSword()">Produce Sword</button>
-    <button onclick="upgradeSword('rarity')">Upgrade Rarity</button>
-    <button onclick="upgradeSword('mold')">Upgrade Mold</button>
-    <button onclick="upgradeSword('quality')">Upgrade Quality</button>
-    <button onclick="sellSword()">Sell Sword</button>
-    <button onclick="toggleInventory()">View Inventory</button>
-    <button onclick="upgradeLuck()">Upgrade Luck</button>
-    <button onclick="exportData()">Export Data</button>
-    <input type="file" onchange="importData(event)" />
+    
+    <div class="category">
+      <h2>Swords</h2>
+      <button onclick="produceSword()">Produce Sword</button>
+      <button onclick="upgradeSword('rarity')">Upgrade Rarity</button>
+      <button onclick="upgradeSword('mold')">Upgrade Mold</button>
+      <button onclick="upgradeSword('quality')">Upgrade Quality</button>
+      <button onclick="sellSword()">Sell Sword</button>
+      <button onclick="toggleInventory()">View Inventory</button>
+      <button onclick="upgradeLuck()">Upgrade Luck</button>
+    </div>
+    
+    <div class="category">
+      <h2>Settings</h2>
+      <button onclick="exportData()">Export Data</button>
+      <input type="file" onchange="importData(event)" />
+    </div>
+
     <div id="gold">Gold: 0</div>
     <div id="sword-container">No sword created yet!</div>
     <div id="next-upgrade-cost">Next Luck Upgrade Cost: 100 Gold</div>
