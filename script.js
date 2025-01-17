@@ -38,6 +38,7 @@ let inventory = [];
 let currentSword = null;
 let autoUpgrades = { molds: false, qualities: false, rarities: false };
 let luckLevel = 1;
+const autoSaveInterval = 30000; // Auto-save every 30 seconds
 
 function produceSword() {
   const rarity = weightedRandom(rarities);
@@ -268,3 +269,6 @@ function importData(event) {
 
 // Load data when the page loads
 window.onload = loadData;
+
+// Set up auto-save
+setInterval(saveData, autoSaveInterval);
