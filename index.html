@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced Sword Factory Game</title>
+  <title>Sword Factory Remake</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -87,11 +87,15 @@
     .sword-ui p {
       margin: 5px 0;
     }
+    .message {
+      color: #0f0;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Advanced Sword Factory Game</h1>
+    <h1>Sword Factory Remake</h1>
     <p>Produce, upgrade, and sell swords with advanced mechanics!</p>
     <button onclick="produceSword()">Produce Sword</button>
     <button onclick="upgradeSword()">Upgrade Sword</button>
@@ -106,6 +110,7 @@
       <button class="toggle" id="auto-upgrade-qualities" onclick="toggleAuto('qualities')">Auto Upgrade Qualities</button>
       <button class="toggle" id="auto-upgrade-rarities" onclick="toggleAuto('rarities')">Auto Upgrade Rarities</button>
     </div>
+    <div id="message" class="message"></div>
   </div>
 
   <div class="inventory" id="inventory">
@@ -116,16 +121,16 @@
 
   <script>
     const rarities = [
-      { name: "Common", multiplier: 1, chance: 1 },
-      { name: "Uncommon", multiplier: 2, chance: 0.5 },
-      { name: "Rare", multiplier: 5, chance: 0.25 },
-      { name: "Epic", multiplier: 20, chance: 0.125 },
-      { name: "Legendary", multiplier: 100, chance: 0.0625 },
-      { name: "Mythical", multiplier: 500, chance: 0.03125 },
-      { name: "Ascended", multiplier: 1000, chance: 0.015625 },
-      { name: "Transcendent", multiplier: 5000, chance: 0.0078125 },
-      { name: "Divine", multiplier: 10000, chance: 0.00390625 },
-      { name: "Omnificent", multiplier: 500000, chance: 0.001953125 }
+      { name: "Common", multiplier: 1, chance: 0.5 },
+      { name: "Uncommon", multiplier: 2, chance: 0.25 },
+      { name: "Rare", multiplier: 5, chance: 0.125 },
+      { name: "Epic", multiplier: 20, chance: 0.0625 },
+      { name: "Legendary", multiplier: 100, chance: 0.03125 },
+      { name: "Mythical", multiplier: 500, chance: 0.015625 },
+      { name: "Ascended", multiplier: 1000, chance: 0.0078125 },
+      { name: "Transcendent", multiplier: 5000, chance: 0.00390625 },
+      { name: "Divine", multiplier: 10000, chance: 0.001953125 },
+      { name: "Omnificent", multiplier: 500000, chance: 0.0009765625 }
     ];
     const molds = ["Katana", "Longsword", "Dagger", "Broadsword", "Rapier"];
     const qualities = ["Poor", "Fine", "Pristine", "Masterwork"];
@@ -159,7 +164,7 @@
 
       // RNG for upgrade success (1/4 chance)
       if (Math.random() > 0.75) {
-        alert("Upgrade failed!");
+        displayMessage("Upgrade failed!");
         return;
       }
 
@@ -175,6 +180,7 @@
       displaySword();
       updateGold();
       updateInventory();
+      displayMessage("Sword upgraded successfully!");
     }
 
     function sellSword() {
@@ -185,6 +191,7 @@
       document.getElementById("sword-container").innerHTML = "No sword created yet!";
       updateGold();
       updateInventory();
+      displayMessage("Sword sold successfully!");
     }
 
     function toggleInventory() {
@@ -251,6 +258,14 @@
       luckLevel++;
       updateGold();
       alert(`Luck upgraded to level ${luckLevel}!`);
+    }
+
+    function displayMessage(message) {
+      const messageDiv = document.getElementById("message");
+      messageDiv.innerText = message;
+      setTimeout(() => {
+        messageDiv.innerText = '';
+      }, 2000);
     }
   </script>
 </body>
