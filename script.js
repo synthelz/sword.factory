@@ -55,6 +55,7 @@ function produceSword() {
   inventory.push(currentSword);
   displaySword();
   updateInventory();
+  saveData();
 }
 
 function upgradeSword(attribute) {
@@ -102,6 +103,7 @@ function upgradeSword(attribute) {
   displaySword();
   updateGold();
   updateInventory();
+  saveData();
   displayMessage(upgraded ? "Sword upgraded successfully!" : "Upgrade failed!");
 }
 
@@ -113,6 +115,7 @@ function sellSword() {
   document.getElementById("sword-container").innerHTML = "No sword created yet!";
   updateGold();
   updateInventory();
+  saveData();
   displayMessage("Sword sold successfully!");
 }
 
@@ -125,6 +128,7 @@ function toggleAuto(type) {
   autoUpgrades[type] = !autoUpgrades[type];
   const button = document.getElementById(`auto-upgrade-${type}`);
   button.classList.toggle("active", autoUpgrades[type]);
+  saveData();
 }
 
 function weightedRandom(list) {
@@ -198,6 +202,7 @@ function upgradeLuck() {
   gold -= cost;
   luckLevel++;
   updateGold();
+  saveData();
   displayMessage(`Luck upgraded to level ${luckLevel}!`);
 }
 
@@ -208,3 +213,58 @@ function displayMessage(message) {
     messageDiv.innerText = '';
   }, 2000);
 }
+
+// Save data to local storage
+function saveData() {
+  const data = {
+    gold,
+    inventory,
+    autoUpgrades,
+    luckLevel,
+    currentSword
+  };
+  localStorage.setItem('swordFactoryData', JSON.stringify(data));
+}
+
+// Load data from local storage
+function loadData() {
+  const savedData = localStorage.getItem('swordFactoryData');
+  if (savedData) {
+    const data = JSON.parse(savedData);
+    gold = data.gold;
+    inventory = data.inventory;
+    autoUpgrades = data.autoUpgrades;
+    luckLevel = data.luckLevel;
+    currentSword = data.currentSword;
+    updateGold();
+    updateInventory();
+    displaySword();
+  }
+}
+
+// Export data to a file
+function exportData() {
+  const data = localStorage.getItem('swordFactoryData');
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'swordFactoryData.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Import data from a file
+function importData(event) {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const data = JSON.parse(e.target.result);
+    localStorage.setItem('swordFactoryData', JSON.stringify(data));
+    loadData();
+  };
+  reader.readAsText(file);
+}
+
+// Load data when the page loads
+window.onload = loadData;
