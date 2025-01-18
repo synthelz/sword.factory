@@ -100,7 +100,9 @@ function upgradeSword(attribute) {
   if (success) {
     displayMessage(`${attribute.charAt(0).toUpperCase() + attribute.slice(1)} upgraded successfully!`);
   } else {
-    displayMessage(`Upgrade failed for ${attribute}.`);
+    displayMessage(
+      `Upgrade failed for ${attribute}. Maximum level reached or insufficient chance.`
+    );
   }
   displaySword();
 }
