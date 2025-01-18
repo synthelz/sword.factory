@@ -70,39 +70,35 @@
       background: #333;
       border-radius: 10px;
       display: inline-block;
-      position: relative; /* Relative positioning for child elements */
-      width: 200px;
-      height: 400px;
+      position: relative;
+      width: 300px;
+      height: 150px;
       border: 2px solid #fff;
+      text-align: left;
+      color: #fff;
     }
     .sword-ui .sword {
-      width: 80%;
-      height: 60%;
-      background: url('sword.png') no-repeat center center; /* Placeholder for sword image */
+      width: 60%;
+      height: 100%;
+      background: url('sword.png') no-repeat center center;
       background-size: contain;
       position: absolute;
-      top: 20%; /* Adjusted to center the sword image */
-      left: 10%;
+      left: 20%;
+      top: 10%;
     }
     .sword-ui .info {
       position: absolute;
-      width: 100%;
-      text-align: center;
-    }
-    .sword-ui .rarity-quality {
-      top: 5px;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: bold;
     }
-    .sword-ui .mold {
-      bottom: 40px;
-      font-size: 12px;
+    .sword-ui .rarity-quality {
+      top: 10px;
+      left: 10px;
     }
-    .sword-ui .value {
+    .sword-ui .mold {
       bottom: 10px;
-      font-size: 12px;
       right: 10px;
-      position: absolute;
+      font-size: 14px;
     }
     .message {
       color: #0f0;
@@ -120,7 +116,7 @@
   <div class="container">
     <h1>Sword Factory Remade</h1>
     <p>Produce, upgrade, and sell swords with advanced mechanics!</p>
-    
+   
     <div class="category">
       <h2>Swords</h2>
       <button onclick="produceSword()">Produce Sword</button>
@@ -131,7 +127,7 @@
       <button onclick="toggleInventory()">View Inventory</button>
       <button onclick="upgradeLuck()">Upgrade Luck</button>
     </div>
-    
+   
     <div class="category">
       <h2>Settings</h2>
       <button onclick="exportData()">Export Data</button>
@@ -140,7 +136,13 @@
     </div>
 
     <div id="cash">Cash: 0</div>
-    <div id="sword-container">No sword created yet!</div>
+    <div id="sword-container">
+      <div class="sword-ui">
+        <div class="info rarity-quality">Godly / Remarkable</div>
+        <div class="sword"></div>
+        <div class="info mold">Amethyst</div>
+      </div>
+    </div>
     <div id="next-upgrade-cost">Next Luck Upgrade Cost: 100 Cash</div>
     <div id="message" class="message"></div>
   </div>
@@ -154,3 +156,4 @@
   <script src="script.js"></script> <!-- Link to your JS file -->
 </body>
 </html>
+
