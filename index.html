@@ -3,220 +3,118 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sword Generator Game</title>
+  <title>Sword Game</title>
   <style>
-    /* General Styles */
+    /* Inline CSS for now to simplify setup */
     body {
-      font-family: 'Arial Black', sans-serif;
-      background: linear-gradient(to bottom, #1e1e2f, #121212);
-      color: white;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #1a1a1a, #333);
+      color: #fff;
       margin: 0;
       padding: 0;
-      text-align: center;
     }
-
-    /* EXP Bar */
-    .exp-bar-container {
-      width: 80%;
-      height: 30px;
-      background: #333;
-      border-radius: 15px;
-      margin: 20px auto;
-      position: relative;
-    }
-
-    .exp-bar {
-      height: 100%;
-      background: linear-gradient(to right, #ffd700, #ffa500);
-      border-radius: 15px;
-      width: 0%;
-      transition: width 0.5s ease;
-    }
-
-    .exp-text {
-      position: absolute;
-      width: 100%;
-      height: 100%;
+    .game-container {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      font-weight: bold;
+      padding: 20px;
     }
-
-    /* Buttons */
+    .sword-gui {
+      text-align: center;
+      margin-bottom: 20px;
+      border: 2px solid #555;
+      padding: 10px;
+      background: #222;
+      border-radius: 10px;
+      width: 300px;
+    }
     .button-container {
-      margin: 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
     }
-
     button {
-      font-size: 16px;
       padding: 10px 20px;
-      margin: 10px;
-      background: #444;
-      color: white;
+      font-size: 16px;
       border: none;
       border-radius: 5px;
+      background-color: #444;
+      color: #fff;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background-color 0.2s;
     }
-
     button:hover {
-      background: #555;
+      background-color: #666;
     }
-
-    /* Sword Box */
-    .sword-box {
+    #leaderboard {
       display: none;
-      margin: 20px auto;
+      background: #222;
       padding: 20px;
-      width: 80%;
-      max-width: 500px;
-      background: rgba(0, 0, 0, 0.8);
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-      text-align: left;
+      text-align: center;
+      width: 300px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid #555;
+    }
+    #leaderboard.hidden {
+      display: none;
+    }
+    #exp-bar-container {
+      width: 100%;
+      max-width: 300px;
+      margin: 20px 0;
+    }
+    #exp-bar {
+      background: #555;
+      height: 20px;
+      border-radius: 10px;
+      overflow: hidden;
       position: relative;
     }
-
-    .sword-box h2 {
-      font-size: 20px;
-      margin: 0 0 10px;
-    }
-
-    .sword-details p {
-      margin: 5px 0;
-      font-size: 18px;
-    }
-
-    .sword-bottom-right {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      font-size: 16px;
-      text-align: right;
-    }
-
-    .sword-bottom-right p {
-      margin: 2px 0;
-    }
-
-    #sword-mold {
-      font-weight: bold;
-    }
-
-    #sword-value {
-      color: #ffd700;
-    }
-
-    /* Leaderboard */
-    .leaderboard {
-      display: none;
-      margin: 20px auto;
-      padding: 20px;
-      width: 80%;
-      max-width: 500px;
-      background: rgba(0, 0, 0, 0.8);
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-      text-align: left;
-    }
-
-    .leaderboard h2 {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-
-    .leaderboard ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .leaderboard li {
-      font-size: 18px;
-      margin: 5px 0;
+    #exp-bar-fill {
+      background: yellow;
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s;
     }
   </style>
 </head>
 <body>
-  <h1 id="player-name"></h1>
-
-  <div class="exp-bar-container">
-    <div class="exp-bar" id="exp-bar"></div>
-    <div class="exp-text" id="exp-text">0 / 100 EXP</div>
-  </div>
-
-  <div class="button-container">
-    <button id="generate-sword">Generate Sword</button>
-    <button id="sell-sword">Sell Sword</button>
-    <button id="upgrade-quality">Upgrade Quality</button>
-    <button id="upgrade-rarity">Upgrade Rarity</button>
-    <button id="upgrade-mold">Upgrade Mold</button>
-    <button id="save-game">Save Game</button>
-    <button id="load-game">Load Game</button>
-    <button id="toggle-leaderboard">Toggle Leaderboard</button>
-  </div>
-
-  <div class="sword-box" id="sword-box">
-    <h2 id="player-sword-name"></h2>
-    <div class="sword-details">
-      <p id="sword-stats"></p>
+  <div class="game-container">
+    <div class="sword-gui">
+      <h2 id="player-name">Player's Sword</h2>
+      <p id="sword-level">Level: 1</p>
+      <p id="sword-stats">Rarity: Common / Quality: Basic</p>
+      <p id="sword-mold">Bronze</p>
+      <p id="sword-value">$0</p>
     </div>
-    <div class="sword-bottom-right">
-      <p id="sword-mold"></p>
-      <p id="sword-value"></p>
+    <div class="button-container">
+      <button id="generate-sword">Generate Sword</button>
+      <button id="sell-sword">Sell Sword</button>
+      <button id="upgrade-quality">Upgrade Quality</button>
+      <button id="upgrade-rarity">Upgrade Rarity</button>
+      <button id="upgrade-mold">Upgrade Mold</button>
+      <button id="save-game">Save Game</button>
+      <button id="load-game">Load Game</button>
+      <button id="toggle-leaderboard">Toggle Leaderboard</button>
+    </div>
+    <div id="leaderboard" class="hidden">
+      <h2>Leaderboard</h2>
+      <ul id="leaderboard-list"></ul>
+      <button id="close-leaderboard">Close</button>
+    </div>
+    <div id="exp-bar-container">
+      <p>EXP: <span id="exp-display">0/100</span></p>
+      <div id="exp-bar">
+        <div id="exp-bar-fill"></div>
+      </div>
     </div>
   </div>
-
-  <div id="message" class="message"></div>
-
-  <div class="leaderboard" id="leaderboard">
-    <h2>Leaderboard</h2>
-    <ul id="leaderboard-list"></ul>
-  </div>
-
-  <script>
-    // Game variables
-    let playerName = "Player";
-    let cash = 0;
-    let currentSword = null;
-    let level = 1;
-    let exp = 0;
-    let nextLevelExp = 100;
-
-    // DOM Elements
-    const playerNameElement = document.getElementById("player-name");
-    const swordBox = document.getElementById("sword-box");
-    const swordStats = document.getElementById("sword-stats");
-    const swordMold = document.getElementById("sword-mold");
-    const swordValue = document.getElementById("sword-value");
-
-    // Update player name
-    playerNameElement.textContent = `${playerName}'s Sword`;
-
-    // Generate Sword
-    function generateSword() {
-      const rarity = "Epic";
-      const quality = "Pristine";
-      const mold = "Mesozoic";
-      const value = 123456;
-
-      currentSword = { rarity, quality, mold, value, level };
-
-      displaySword();
-    }
-
-    // Display Sword
-    function displaySword() {
-      swordBox.style.display = "block";
-      swordStats.textContent = `Level ${currentSword.level} | Rarity: ${currentSword.rarity}/${currentSword.quality}`;
-      swordMold.textContent = currentSword.mold;
-      swordValue.textContent = `$${currentSword.value.toLocaleString()}`;
-    }
-
-    // Attach Event Listeners
-    document.getElementById("generate-sword").addEventListener("click", generateSword);
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
