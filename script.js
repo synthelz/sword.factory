@@ -63,25 +63,29 @@ function generateSword() {
     quality: quality.name,
     value: value,
   };
+  displayMessage("Sword generated successfully!");
   displaySword();
 }
 
 function sellSword() {
-  if (!currentSword) return alert("Produce a sword first!");
+  if (!currentSword) {
+    displayMessage("Produce a sword first!");
+    return;
+  }
 
   cash += currentSword.value;
-  alert(`Sword sold for $${currentSword.value}!`);
+  displayMessage(`Sword sold for $${currentSword.value}!`);
   currentSword = null;
   updateCash();
   displaySword();
 }
 
 function saveSword() {
-  alert("Sword saved!");
+  displayMessage("Sword saved successfully!");
 }
 
 function upgradeSword(type) {
-  alert(`Upgraded ${type}!`);
+  displayMessage(`Upgraded ${type} successfully!`);
 }
 
 function weightedRandom(list) {
@@ -108,7 +112,8 @@ function displaySword() {
   }
 
   swordBox.style.display = "block";
-  document.getElementById("sword-level").textContent = currentSword.value;
+  // Ensure levels are whole numbers
+  document.getElementById("sword-level").textContent = Math.floor(currentSword.value);
   document.getElementById("sword-rarity").textContent = currentSword.rarity;
   document.getElementById("sword-quality").textContent = currentSword.quality;
   document.getElementById("sword-rarity-text").textContent = currentSword.rarity;
@@ -120,6 +125,11 @@ function displaySword() {
 
 function updateCash() {
   document.getElementById("cash").textContent = cash;
+}
+
+function displayMessage(message) {
+  const messageDiv = document.getElementById("message");
+  messageDiv.textContent = message;
 }
 
 // Load data when the page loads
