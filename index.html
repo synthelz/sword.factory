@@ -5,42 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sword Game</title>
   <style>
-    /* CSS Styles */
+    /* General Styles */
     body {
       font-family: Arial, sans-serif;
       background-color: #1e1e1e;
       color: white;
       margin: 0;
       padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .game-container {
       display: flex;
+      justify-content: center;
+      width: 90%;
+      margin-top: 20px;
+    }
+
+    .sword-container {
+      display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
+      gap: 20px;
     }
 
     .sword-gui {
-      width: 250px;
-      height: 250px;
+      width: 300px;
+      height: 300px;
       border: 2px solid #444;
       border-radius: 10px;
-      background-color: #2a2a2a;
       padding: 10px;
       position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .sword-gui h2 {
       font-size: 16px;
       margin: 0;
-      text-align: left;
     }
 
     .sword-gui p {
       margin: 5px 0;
       font-size: 14px;
-      text-align: left;
     }
 
     .sword-mold-value {
@@ -50,12 +60,18 @@
       font-size: 12px;
     }
 
-    .button-container {
+    .upgrade-buttons {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
       justify-content: center;
-      margin-top: 20px;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .other-buttons {
+      margin-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     button {
@@ -66,21 +82,11 @@
       background-color: #444;
       color: white;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
 
     button:hover {
       background-color: #666;
-    }
-
-    #leaderboard {
-      display: none;
-      text-align: center;
-      background-color: #1c1c1c;
-      padding: 10px;
-      border-radius: 10px;
-      border: 2px solid #444;
-      width: 300px;
-      margin-top: 20px;
     }
 
     .exp-bar {
@@ -88,7 +94,7 @@
       border-radius: 5px;
       overflow: hidden;
       width: 300px;
-      margin-top: 20px;
+      margin-top: 10px;
     }
 
     .exp-bar-fill {
@@ -101,45 +107,49 @@
       text-align: center;
       margin-top: 10px;
     }
+
+    .common { color: #cccccc; }
+    .uncommon { color: #00ff00; }
+    .rare { color: #0000ff; }
+    .epic { color: #800080; }
+    .legendary { color: #ffa500; }
   </style>
 </head>
 <body>
   <div class="game-container">
-    <!-- Sword GUI -->
-    <div class="sword-gui">
-      <h2 id="player-name">Player's Sword</h2>
-      <p id="level-rarity-quality">Level 1 | Common / Fine</p>
-      <div class="sword-mold-value">
-        <p id="mold-value">Bronze 1,234</p>
+    <!-- Sword and Upgrade Buttons -->
+    <div class="sword-container">
+      <!-- Sword GUI -->
+      <div id="sword-gui" class="sword-gui common">
+        <h2 id="player-name">Player's Sword</h2>
+        <p id="level-rarity-quality">Level 1 | <span id="rarity" class="common">Common</span> / <span id="quality" class="common">Fine</span></p>
+        <div class="sword-mold-value">
+          <span id="mold" class="common">Bronze</span>
+          <span id="value">$1,234</span>
+        </div>
       </div>
+
+      <!-- Upgrade Buttons -->
+      <div class="upgrade-buttons">
+        <button id="upgrade-quality">Upgrade Quality</button>
+        <button id="upgrade-rarity">Upgrade Rarity</button>
+        <button id="upgrade-mold">Upgrade Mold</button>
+      </div>
+
+      <!-- EXP Bar -->
+      <div class="exp-bar">
+        <div class="exp-bar-fill" id="exp-bar-fill"></div>
+      </div>
+      <p id="exp-display">EXP: 0 / 100</p>
     </div>
 
-    <!-- EXP Bar -->
-    <div class="exp-bar">
-      <div class="exp-bar-fill" id="exp-bar-fill"></div>
-    </div>
-    <p id="exp-display">EXP: 0 / 100</p>
-
-    <!-- Buttons -->
-    <div class="button-container">
+    <!-- Other Buttons -->
+    <div class="other-buttons">
       <button id="generate-sword">Generate Sword</button>
       <button id="sell-sword">Sell Sword</button>
-      <button id="upgrade-quality">Upgrade Quality</button>
-      <button id="upgrade-rarity">Upgrade Rarity</button>
-      <button id="upgrade-mold">Upgrade Mold</button>
       <button id="save-game">Save Game</button>
       <button id="load-game">Load Game</button>
       <button id="toggle-leaderboard">Toggle Leaderboard</button>
-    </div>
-
-    <!-- Leaderboard -->
-    <div id="leaderboard">
-      <h3>Leaderboard</h3>
-      <ul id="leaderboard-list">
-        <li>Player1 - 10,000 Gold</li>
-        <li>Player2 - 8,000 Gold</li>
-      </ul>
-      <button id="close-leaderboard">Close</button>
     </div>
   </div>
   <script src="script.js"></script>
