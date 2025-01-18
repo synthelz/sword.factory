@@ -154,3 +154,24 @@ function updateCash() {
 function displayMessage(message) {
   document.getElementById("message").textContent = message;
 }
+
+// Save and load game state
+function saveGame() {
+  const gameState = { cash, currentSword };
+  localStorage.setItem("swordFactoryGame", JSON.stringify(gameState));
+  displayMessage("Game saved successfully!");
+}
+
+function loadGame() {
+  const savedState = localStorage.getItem("swordFactoryGame");
+  if (savedState) {
+    const { cash: savedCash, currentSword: savedSword } = JSON.parse(savedState);
+    cash = savedCash || 0;
+    currentSword = savedSword || null;
+    updateCash();
+    displaySword();
+    displayMessage("Game loaded successfully!");
+  } else {
+    displayMessage("No saved game found.");
+  }
+}
