@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sword Generator</title>
+  <title>Sword Generator Game</title>
   <style>
+    /* General Styles */
     body {
       font-family: 'Arial Black', sans-serif;
       background: linear-gradient(to bottom, #1e1e2f, #121212);
@@ -14,6 +15,7 @@
       text-align: center;
     }
 
+    /* EXP Bar */
     .exp-bar-container {
       width: 80%;
       height: 30px;
@@ -42,6 +44,7 @@
       font-weight: bold;
     }
 
+    /* Buttons */
     .button-container {
       margin: 20px 0;
     }
@@ -62,6 +65,7 @@
       background: #555;
     }
 
+    /* Sword Box */
     .sword-box {
       display: none;
       margin: 20px auto;
@@ -71,48 +75,67 @@
       background: rgba(0, 0, 0, 0.8);
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-      text-align: center;
+      text-align: left;
       position: relative;
     }
 
-    .sword-header {
+    .sword-box h2 {
+      font-size: 20px;
+      margin: 0 0 10px;
+    }
+
+    .sword-details p {
+      margin: 5px 0;
       font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .sword-details {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 16px;
-    }
-
-    #sword-level {
-      margin-right: 10px;
-      font-weight: bold;
-    }
-
-    #sword-rarity-quality {
-      font-size: 16px;
-      font-weight: bold;
     }
 
     .sword-bottom-right {
       position: absolute;
       bottom: 10px;
       right: 10px;
-      font-size: 14px;
+      font-size: 16px;
       text-align: right;
+    }
+
+    .sword-bottom-right p {
+      margin: 2px 0;
     }
 
     #sword-mold {
       font-weight: bold;
-      margin-right: 5px;
     }
 
     #sword-value {
       color: #ffd700;
+    }
+
+    /* Leaderboard */
+    .leaderboard {
+      display: none;
+      margin: 20px auto;
+      padding: 20px;
+      width: 80%;
+      max-width: 500px;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      text-align: left;
+    }
+
+    .leaderboard h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .leaderboard ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .leaderboard li {
+      font-size: 18px;
+      margin: 5px 0;
     }
   </style>
 </head>
@@ -136,14 +159,13 @@
   </div>
 
   <div class="sword-box" id="sword-box">
-    <h2 id="sword-header"></h2>
+    <h2 id="player-sword-name"></h2>
     <div class="sword-details">
-      <span id="sword-level"></span>
-      <span id="sword-rarity-quality"></span>
+      <p id="sword-stats"></p>
     </div>
     <div class="sword-bottom-right">
-      <span id="sword-mold"></span>
-      <span id="sword-value"></span>
+      <p id="sword-mold"></p>
+      <p id="sword-value"></p>
     </div>
   </div>
 
@@ -154,6 +176,47 @@
     <ul id="leaderboard-list"></ul>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // Game variables
+    let playerName = "Player";
+    let cash = 0;
+    let currentSword = null;
+    let level = 1;
+    let exp = 0;
+    let nextLevelExp = 100;
+
+    // DOM Elements
+    const playerNameElement = document.getElementById("player-name");
+    const swordBox = document.getElementById("sword-box");
+    const swordStats = document.getElementById("sword-stats");
+    const swordMold = document.getElementById("sword-mold");
+    const swordValue = document.getElementById("sword-value");
+
+    // Update player name
+    playerNameElement.textContent = `${playerName}'s Sword`;
+
+    // Generate Sword
+    function generateSword() {
+      const rarity = "Epic";
+      const quality = "Pristine";
+      const mold = "Mesozoic";
+      const value = 123456;
+
+      currentSword = { rarity, quality, mold, value, level };
+
+      displaySword();
+    }
+
+    // Display Sword
+    function displaySword() {
+      swordBox.style.display = "block";
+      swordStats.textContent = `Level ${currentSword.level} | Rarity: ${currentSword.rarity}/${currentSword.quality}`;
+      swordMold.textContent = currentSword.mold;
+      swordValue.textContent = `$${currentSword.value.toLocaleString()}`;
+    }
+
+    // Attach Event Listeners
+    document.getElementById("generate-sword").addEventListener("click", generateSword);
+  </script>
 </body>
 </html>
