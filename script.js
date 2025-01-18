@@ -52,7 +52,8 @@ function updateExpBar() {
   const currentLevelExp = exp - ((level - 1) * (level - 1) * 150);
   const nextLevelExp = (level * level) * 150;
   const percentage = (currentLevelExp / nextLevelExp) * 100;
-  document.getElementById("exp-bar").style.width = `${percentage}%`;
+  const expBar = document.getElementById("exp-bar");
+  expBar.style.width = `${percentage}%`;
 }
 
 function weightedRandom(attributes) {
