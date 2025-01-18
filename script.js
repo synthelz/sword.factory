@@ -130,6 +130,9 @@ function updateCash() {
 function displayMessage(message) {
   const messageDiv = document.getElementById("message");
   messageDiv.textContent = message;
+  setTimeout(() => {
+    messageDiv.textContent = '';
+  }, 3000); // Message will disappear after 3 seconds
 }
 
 // Load data when the page loads
