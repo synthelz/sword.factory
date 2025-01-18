@@ -25,6 +25,7 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
       position: relative;
+      display: none;
     }
     .sword-box h2 {
       margin: 0 0 10px;
@@ -76,6 +77,11 @@
       font-size: 18px;
       font-weight: bold;
     }
+    .message {
+      margin-top: 10px;
+      color: #0f0; /* Green color for successful messages */
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
@@ -107,6 +113,7 @@
     </div>
 
     <div class="cash">Cash: $<span id="cash">0</span></div>
+    <div class="message" id="message"></div>
   </div>
 
   <script src="script.js"></script>
