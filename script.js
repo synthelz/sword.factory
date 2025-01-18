@@ -173,6 +173,22 @@ function sellSword() {
   displayMessage(`Sword sold! Gained EXP and $${formatNumber(cash)}`);
 }
 
+// Upgrade quality
+function upgradeQuality() {
+  if (!currentSword) {
+    displayMessage("No sword to upgrade!");
+    return;
+  }
+  const currentIndex = qualities.findIndex(q => q.name === currentSword.quality.name);
+  if (currentIndex === -1 || currentIndex === qualities.length - 1) {
+    displayMessage("Quality is already at maximum!");
+    return;
+  }
+  currentSword.quality = qualities[currentIndex + 1];
+  displaySword();
+  displayMessage("Sword quality upgraded!");
+}
+
 // Upgrade rarity
 function upgradeRarity() {
   if (!currentSword) {
