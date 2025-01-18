@@ -87,12 +87,16 @@ function saveGame() {
     playerName
   };
   localStorage.setItem("swordGameSave", JSON.stringify(saveData));
+  displayMessage("Game saved!");
 }
 
 // Load the game
 function loadGame() {
   const saveData = JSON.parse(localStorage.getItem("swordGameSave"));
-  if (!saveData) return displayMessage("No save found!");
+  if (!saveData) {
+    displayMessage("No save found!");
+    return;
+  }
 
   cash = saveData.cash || 0;
   level = saveData.level || 1;
