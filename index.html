@@ -55,11 +55,10 @@
       color: #ffa500;
     }
     .sword-box .mold {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      font-size: 14px;
-      color: #00ffff;
+      position: relative;
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
     }
     .buttons {
       margin: 20px 0;
@@ -77,15 +76,28 @@
     .buttons button:hover {
       background: #777;
     }
-    .cash {
+    .cash, .exp {
       margin-top: 20px;
       font-size: 18px;
       font-weight: bold;
     }
     .message {
       margin-top: 10px;
-      color: #0f0; /* Green color for successful messages */
+      color: #0f0;
       font-size: 16px;
+    }
+    .exp-bar-container {
+      margin-top: 10px;
+      background: #555;
+      border-radius: 5px;
+      width: 80%;
+      margin: 10px auto;
+    }
+    .exp-bar {
+      height: 20px;
+      background: #0f0;
+      border-radius: 5px;
+      width: 0%;
     }
 
     /* Color coding for sword attributes */
@@ -115,22 +127,22 @@
     <div class="sword-box">
       <h2><span id="player-name">Player's</span> Sword</h2>
       <div class="level-rarity">
-        Level: <span id="sword-level">0</span> | Rarity: <span id="sword-rarity" class="normal">Normal</span>
+        Level <span id="sword-level">1</span> | <span id="sword-rarity" class="normal">Normal</span>
       </div>
       <div class="attributes">
-        <span id="sword-quality">Quality: Normal</span>
-        <span id="sword-rarity-text">Rarity: Normal</span>
+        <span id="sword-quality">Normal</span>
         <span class="enchant">Resistance: <span id="enchant1">0</span></span>
         <span class="enchant">Greed++: <span id="enchant2">0</span></span>
         <span class="enchant">Sharpness: <span id="enchant3">0</span></span>
       </div>
-      <div class="mold">Mold: <span id="sword-mold">Normal</span></div>
+      <div class="mold" id="sword-mold">Normal</div>
     </div>
 
     <div class="buttons">
       <button onclick="generateSword()">Generate Sword</button>
       <button onclick="sellSword()">Sell Sword</button>
-      <button onclick="saveSword()">Save Sword</button>
+      <button onclick="saveGame()">Save Game</button>
+      <button onclick="loadGame()">Load Game</button>
       <button onclick="upgradeSword('quality')">Upgrade Quality</button>
       <button onclick="upgradeSword('rarity')">Upgrade Rarity</button>
       <button onclick="upgradeSword('mold')">Upgrade Mold</button>
@@ -138,6 +150,10 @@
     </div>
 
     <div class="cash">Cash: $<span id="cash">0</span></div>
+    <div class="exp">EXP: <span id="exp">0</span></div>
+    <div class="exp-bar-container">
+      <div class="exp-bar" id="exp-bar"></div>
+    </div>
     <div class="message" id="message"></div>
   </div>
 
