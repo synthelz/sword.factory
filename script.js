@@ -55,13 +55,20 @@ const qualities = [
 
 // Update EXP bar
 function updateExpBar() {
+  while (exp >= nextLevelExp) {
+    levelUp();
+  }
   const percentage = (exp / nextLevelExp) * 100;
   expBar.style.width = `${percentage}%`;
   expText.textContent = `${exp} / ${nextLevelExp} EXP`;
+}
 
-  if (exp >= nextLevelExp) {
-    levelUp();
-  }
+// Level up
+function levelUp() {
+  level++;
+  exp -= nextLevelExp;
+  nextLevelExp = Math.floor(nextLevelExp * 1.5);
+  displayMessage(`Level Up! You are now Level ${level}!`);
 }
 
 // Auto-save game
