@@ -97,6 +97,32 @@
       font-weight: bold;
       color: #00ff00; /* Green text for notifications */
     }
+
+    .leaderboard {
+      margin-top: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      text-align: left;
+      display: none;
+    }
+
+    .leaderboard h2 {
+      margin: 0 0 10px;
+      color: #ffd700;
+    }
+
+    .leaderboard ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .leaderboard li {
+      font-size: 16px;
+      margin: 5px 0;
+    }
   </style>
 </head>
 <body>
@@ -115,6 +141,7 @@
     <button id="upgrade-mold">Upgrade Mold</button>
     <button id="save-game">Save Game</button>
     <button id="load-game">Load Game</button>
+    <button id="show-leaderboard">Show Leaderboard</button>
   </div>
 
   <div class="sword-box" id="sword-box">
@@ -124,6 +151,11 @@
   </div>
 
   <div id="message" class="message"></div>
+
+  <div class="leaderboard" id="leaderboard">
+    <h2>Leaderboard</h2>
+    <ul id="leaderboard-list"></ul>
+  </div>
 
   <script src="script.js"></script>
 </body>
