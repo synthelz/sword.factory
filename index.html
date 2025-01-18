@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sword Factory Remade</title>
+  <title>Sword Factory Revamp</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -16,145 +16,97 @@
     .container {
       padding: 20px;
     }
-    button {
-      margin: 10px;
-      padding: 10px 20px;
+    .sword-box {
       background: #444;
-      border: none;
       color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    button:hover {
-      background: #666;
-    }
-    .inventory {
-      display: none;
-      position: fixed;
-      top: 10%;
-      left: 10%;
-      width: 80%;
-      height: 70%;
-      background: #333;
-      border: 2px solid #fff;
-      overflow-y: auto;
-      border-radius: 10px;
       padding: 20px;
-      z-index: 1000;
-    }
-    .inventory h2 {
-      margin: 0 0 10px 0;
-    }
-    .sword-item {
-      margin: 10px 0;
-      padding: 10px;
-      border: 1px solid #555;
-      border-radius: 5px;
-      text-align: left;
-    }
-    .inventory-close {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      background: #900;
-      color: #fff;
-      border: none;
-      padding: 5px 10px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    .sword-ui {
-      margin-top: 20px;
-      padding: 20px;
-      background: #333;
-      border-radius: 10px;
-      display: inline-block;
-      position: relative;
+      margin: 20px auto;
       width: 300px;
-      height: 400px;
-      border: 2px solid #fff;
-      color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      position: relative;
     }
-    .sword-ui .sword {
-      width: 80%;
-      height: 60%;
-      background: url('sword.png') no-repeat center center;
-      background-size: contain;
-      position: absolute;
-      top: 30%; /* Centered vertically */
-      left: 10%; /* Centered horizontally */
+    .sword-box h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
     }
-    .sword-ui .info {
-      position: absolute;
-      font-size: 18px;
+    .sword-box .level-rarity {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    .sword-box .attributes {
+      font-size: 14px;
+      text-align: left;
+      margin: 10px 0;
+    }
+    .sword-box .attributes span {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .sword-box .attributes .enchant {
+      font-size: 14px;
       font-weight: bold;
+      color: #ffa500;
     }
-    .sword-ui .rarity-quality {
-      top: 10px;
-      width: 100%;
-      text-align: center;
-      font-size: 20px; /* Larger text for visibility */
-    }
-    .sword-ui .mold {
+    .sword-box .mold {
+      position: absolute;
       bottom: 10px;
       right: 10px;
-      font-size: 18px; /* Larger text for attributes */
+      font-size: 14px;
+      color: #00ffff;
     }
-    .message {
-      color: #0f0;
-      margin-top: 10px;
-    }
-    .category {
+    .buttons {
       margin: 20px 0;
     }
-    .category h2 {
-      margin: 10px 0;
+    .buttons button {
+      margin: 10px;
+      padding: 10px 20px;
+      background: #555;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .buttons button:hover {
+      background: #777;
+    }
+    .cash {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Sword Factory Remade</h1>
-    <p>Produce, upgrade, and sell swords with advanced mechanics!</p>
-   
-    <div class="category">
-      <h2>Swords</h2>
-      <button onclick="produceSword()">Produce Sword</button>
+    <h1>Sword Factory Revamp</h1>
+    <div class="sword-box">
+      <h2>kvibes5's Sword</h2>
+      <div class="level-rarity">
+        Level: <span id="sword-level">733</span> | Rarity: <span id="sword-rarity">7.1Qd</span>
+      </div>
+      <div class="attributes">
+        <span>Quality: <span id="sword-quality">Miraculous</span></span>
+        <span>Rarity: <span id="sword-rarity-text">Catastrophic</span></span>
+        <span class="enchant">Resistance: <span id="enchant1">81</span></span>
+        <span class="enchant">Greed++: <span id="enchant2">74</span></span>
+        <span class="enchant">Sharpness: <span id="enchant3">70</span></span>
+      </div>
+      <div class="mold">Mold: <span id="sword-mold">Topaz</span></div>
+    </div>
+
+    <div class="buttons">
+      <button onclick="generateSword()">Generate Sword</button>
+      <button onclick="sellSword()">Sell Sword</button>
+      <button onclick="saveSword()">Save Sword</button>
+      <button onclick="upgradeSword('quality')">Upgrade Quality</button>
       <button onclick="upgradeSword('rarity')">Upgrade Rarity</button>
       <button onclick="upgradeSword('mold')">Upgrade Mold</button>
-      <button onclick="upgradeSword('quality')">Upgrade Quality</button>
-      <button onclick="sellSword()">Sell Sword</button>
-      <button onclick="toggleInventory()">View Inventory</button>
-      <button onclick="upgradeLuck()">Upgrade Luck</button>
-    </div>
-   
-    <div class="category">
-      <h2>Settings</h2>
-      <button onclick="exportData()">Export Data</button>
-      <input type="file" onchange="importData(event)" />
-      <button onclick="resetData()">Reset Save Data</button>
+      <button onclick="upgradeSword('enchant')">Upgrade Enchants</button>
     </div>
 
-    <div id="cash">Cash: 0</div>
-    <div id="sword-container">
-      <div class="sword-ui">
-        <div class="info rarity-quality">Godly / Remarkable</div>
-        <div class="sword"></div> <!-- Placeholder sword image -->
-        <div class="info mold">Amethyst</div>
-      </div>
-    </div>
-    <div id="next-upgrade-cost">Next Luck Upgrade Cost: 100 Cash</div>
-    <div id="message" class="message"></div>
+    <div class="cash">Cash: $<span id="cash">0</span></div>
   </div>
-
-  <div class="inventory" id="inventory">
-    <button class="inventory-close" onclick="toggleInventory()">Close</button>
-    <h2>Sword Inventory</h2>
-    <div id="inventory-list"></div>
-  </div>
-
-  <script src="script.js"></script> <!-- Link to your JS file -->
 </body>
 </html>
-
