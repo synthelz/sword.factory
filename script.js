@@ -1,4 +1,3 @@
-// Rarities, molds, and qualities data
 const rarities = [
   { name: "Common", multiplier: 1, baseChance: 1 },
   { name: "Uncommon", multiplier: 2, baseChance: 0.5 },
@@ -190,12 +189,68 @@ function loadGame() {
   }
 }
 
+// Upgrade sword logic
+function upgradeSword(attribute) {
+  if (!currentSword) {
+    displayMessage("No sword to upgrade! Generate one first.");
+    return;
+  }
+
+  let success = false;
+
+  if (attribute === "quality") {
+    success = tryUpgrade(qualities, "quality");
+  } else if (attribute === "rarity") {
+    success = tryUpgrade(rarities, "rarity");
+  } else if (attribute === "mold") {
+    success = tryUpgrade(molds, "mold");
+  } else if (attribute === "enchant") {
+    success = tryUpgradeEnchant();
+  }
+
+  if (success) {
+    displayMessage(`${attribute.charAt(0).toUpperCase() + attribute.slice(1)} upgraded successfully!`);
+  } else {
+    displayMessage(`Upgrade failed for ${attribute}. Maximum level reached or insufficient chance.`);
+  }
+  displaySword();
+}
+
+function tryUpgrade(attributeList, attributeKey) {
+  const currentIndex = attributeList.findIndex(attr => attr.name === currentSword[attributeKey]);
+  if (currentIndex === -1 || currentIndex === attributeList.length - 1) return false;
+
+  const nextAttribute = attributeList[currentIndex + 1];
+  if (Math.random() <= nextAttribute.baseChance) {
+    currentSword[attributeKey] = nextAttribute.name;
+    currentSword[`${attributeKey}Multiplier`] = nextAttribute.multiplier;
+    currentSword.value *= nextAttribute.multiplier / attributeList[currentIndex].multiplier;
+    return true;
+  }
+  return false;
+}
+
+function tryUpgradeEnchant() {
+  const enchantChance = 0.2; // 20% success rate
+  if (Math.random() <= enchantChance) {
+    for (const key in currentSword.enchants) {
+      currentSword.enchants[key] += 1;
+    }
+    return true;
+  }
+  return false;
+}
+
 // Attach event listeners to buttons
 function setupEventListeners() {
   document.getElementById("generate-sword").addEventListener("click", generateSword);
   document.getElementById("sell-sword").addEventListener("click", sellSword);
   document.getElementById("save-game").addEventListener("click", saveGame);
   document.getElementById("load-game").addEventListener("click", loadGame);
+  document.getElementById("upgrade-quality").addEventListener("click", () => upgradeSword("quality"));
+  document.getElementById("upgrade-rarity").addEventListener("click", () => upgradeSword("rarity"));
+  document.getElementById("upgrade-mold").addEventListener("click", () => upgradeSword("mold"));
+  document.getElementById("upgrade-enchant").addEventListener("click", () => upgradeSword("enchant"));
 }
 
 // Initialize the game
