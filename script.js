@@ -1,3 +1,4 @@
+// Rarities, molds, and qualities data
 const rarities = [
   { name: "Common", multiplier: 1, baseChance: 1 },
   { name: "Uncommon", multiplier: 2, baseChance: 0.5 },
@@ -36,18 +37,12 @@ let exp = 0;
 let level = 1;
 let currentSword = null;
 
-function calculateLevel() {
-  return Math.floor(1 + Math.sqrt(exp / 150)); // Quadratic EXP scaling
+// Debugging helper
+function logDebug(message) {
+  console.log(`[DEBUG]: ${message}`);
 }
 
-function updateLevel() {
-  const newLevel = calculateLevel();
-  if (newLevel > level) {
-    level = newLevel;
-    displayMessage(`Congratulations! You've reached Level ${level}!`);
-  }
-}
-
+// Format numbers for readability
 function formatNumber(num) {
   if (num >= 1e12) return (num / 1e12).toFixed(2) + "T";
   if (num >= 1e9) return (num / 1e9).toFixed(2) + "B";
@@ -56,10 +51,12 @@ function formatNumber(num) {
   return Math.floor(num).toString();
 }
 
+// Update cash display
 function updateCash() {
   document.getElementById("cash").textContent = formatNumber(cash);
 }
 
+// Update EXP bar
 function updateExpBar() {
   const currentLevelExp = exp - ((level - 1) * (level - 1) * 150);
   const nextLevelExp = (level * level) * 150;
@@ -68,6 +65,21 @@ function updateExpBar() {
   document.getElementById("exp").textContent = formatNumber(exp);
 }
 
+// Calculate player level
+function calculateLevel() {
+  return Math.floor(1 + Math.sqrt(exp / 150));
+}
+
+// Update player level
+function updateLevel() {
+  const newLevel = calculateLevel();
+  if (newLevel > level) {
+    level = newLevel;
+    displayMessage(`Congratulations! You've reached Level ${level}!`);
+  }
+}
+
+// Weighted random selection
 function weightedRandom(attributes) {
   const totalWeight = attributes.reduce((sum, attr) => sum + attr.baseChance, 0);
   const random = Math.random() * totalWeight;
@@ -81,7 +93,9 @@ function weightedRandom(attributes) {
   }
 }
 
+// Generate a new sword
 function generateSword() {
+  logDebug("Generating a new sword...");
   const rarity = weightedRandom(rarities);
   const mold = weightedRandom(molds);
   const quality = weightedRandom(qualities);
@@ -103,6 +117,7 @@ function generateSword() {
   displaySword();
 }
 
+// Sell the current sword
 function sellSword() {
   if (!currentSword) {
     displayMessage("No sword to sell! Generate one first.");
@@ -126,59 +141,7 @@ function sellSword() {
   displaySword();
 }
 
-function upgradeSword(attribute) {
-  if (!currentSword) {
-    displayMessage("No sword to upgrade! Generate one first.");
-    return;
-  }
-
-  let success = false;
-
-  if (attribute === "quality") {
-    success = tryUpgrade(qualities, "quality");
-  } else if (attribute === "rarity") {
-    success = tryUpgrade(rarities, "rarity");
-  } else if (attribute === "mold") {
-    success = tryUpgrade(molds, "mold");
-  } else if (attribute === "enchant") {
-    success = tryUpgradeEnchant();
-  }
-
-  if (success) {
-    displayMessage(`${attribute.charAt(0).toUpperCase() + attribute.slice(1)} upgraded successfully!`);
-  } else {
-    displayMessage(
-      `Upgrade failed for ${attribute}. Maximum level reached or insufficient chance.`
-    );
-  }
-  displaySword();
-}
-
-function tryUpgrade(attributeList, attributeKey) {
-  const currentIndex = attributeList.findIndex(attr => attr.name === currentSword[attributeKey]);
-  if (currentIndex === -1 || currentIndex === attributeList.length - 1) return false;
-
-  const nextAttribute = attributeList[currentIndex + 1];
-  if (Math.random() <= nextAttribute.baseChance) {
-    currentSword[attributeKey] = nextAttribute.name;
-    currentSword[`${attributeKey}Multiplier`] = nextAttribute.multiplier;
-    currentSword.value *= nextAttribute.multiplier / attributeList[currentIndex].multiplier;
-    return true;
-  }
-  return false;
-}
-
-function tryUpgradeEnchant() {
-  const enchantChance = 0.2; // 20% success rate
-  if (Math.random() <= enchantChance) {
-    for (const key in currentSword.enchants) {
-      currentSword.enchants[key] += 1;
-    }
-    return true;
-  }
-  return false;
-}
-
+// Display the current sword
 function displaySword() {
   const swordBox = document.querySelector(".sword-box");
   if (!currentSword) {
@@ -197,29 +160,25 @@ function displaySword() {
   document.getElementById("enchant3").textContent = currentSword.enchants.enchant3;
 }
 
+// Display messages to the player
 function displayMessage(message) {
   document.getElementById("message").textContent = message;
 }
 
-function saveGame() {
-  const gameState = { cash, exp, level, currentSword };
-  localStorage.setItem("swordFactoryGame", JSON.stringify(gameState));
-  displayMessage("Game saved successfully!");
+// Add event listeners to buttons
+function setupEventListeners() {
+  document.querySelector("button[onclick='generateSword()']").addEventListener("click", generateSword);
+  document.querySelector("button[onclick='sellSword()']").addEventListener("click", sellSword);
+  document.querySelector("button[onclick='saveGame()']").addEventListener("click", saveGame);
+  document.querySelector("button[onclick='loadGame()']").addEventListener("click", loadGame);
 }
 
-function loadGame() {
-  const savedState = localStorage.getItem("swordFactoryGame");
-  if (savedState) {
-    const { cash: savedCash, exp: savedExp, level: savedLevel, currentSword: savedSword } = JSON.parse(savedState);
-    cash = savedCash || 0;
-    exp = savedExp || 0;
-    level = savedLevel || 1;
-    currentSword = savedSword || null;
-    updateCash();
-    updateExpBar();
-    displaySword();
-    displayMessage("Game loaded successfully!");
-  } else {
-    displayMessage("No saved game found.");
-  }
+// Initialize the game
+function initializeGame() {
+  setupEventListeners();
+  updateCash();
+  updateExpBar();
+  displayMessage("Welcome to Sword Factory Revamp!");
 }
+
+initializeGame();
