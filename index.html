@@ -19,7 +19,8 @@
 
     .game-container {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
       width: 90%;
       margin-top: 20px;
     }
@@ -161,6 +162,12 @@
       <button id="save-game">Save Game</button>
       <button id="load-game">Load Game</button>
       <button id="toggle-leaderboard">Toggle Leaderboard</button>
+    </div>
+
+    <!-- Leaderboard -->
+    <div id="leaderboard" style="display: none; margin-top: 20px; color: white;">
+      <h2>Leaderboard</h2>
+      <ol id="leaderboard-list"></ol>
     </div>
   </div>
   <p id="message-box" style="text-align: center; font-size: 14px; height: 20px;"></p>
