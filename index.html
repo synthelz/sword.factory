@@ -7,20 +7,47 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #222;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
       color: #fff;
       margin: 0;
       padding: 0;
       text-align: center;
     }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     .container {
       padding: 20px;
     }
+
     h1 {
       font-size: 32px;
       color: #ffcc00;
       margin-bottom: 20px;
     }
+
+    .exp-bar-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #555;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .exp-bar {
+      height: 20px;
+      background: yellow;
+      width: 0%;
+    }
+
     .sword-box {
       background: #444;
       color: #fff;
@@ -32,37 +59,45 @@
       position: relative;
       display: none;
     }
+
     .sword-box h2 {
       margin: 0 0 10px;
       font-size: 20px;
     }
+
     .sword-box .level-rarity {
       font-size: 16px;
       margin-bottom: 10px;
     }
+
     .sword-box .attributes {
       font-size: 14px;
       text-align: left;
       margin: 10px 0;
     }
+
     .sword-box .attributes span {
       display: block;
       margin-bottom: 5px;
     }
+
     .sword-box .attributes .enchant {
       font-size: 14px;
       font-weight: bold;
       color: #ffa500;
     }
+
     .sword-box .mold {
       position: relative;
       margin-top: 15px;
       font-size: 18px;
       font-weight: bold;
     }
+
     .buttons {
       margin: 20px 0;
     }
+
     .buttons button {
       margin: 10px;
       padding: 10px 20px;
@@ -73,31 +108,21 @@
       font-size: 14px;
       cursor: pointer;
     }
+
     .buttons button:hover {
       background: #777;
     }
+
     .cash, .exp {
       margin-top: 20px;
       font-size: 18px;
       font-weight: bold;
     }
+
     .message {
       margin-top: 10px;
       color: #0f0;
       font-size: 16px;
-    }
-    .exp-bar-container {
-      margin-top: 10px;
-      background: #555;
-      border-radius: 5px;
-      width: 80%;
-      margin: 10px auto;
-    }
-    .exp-bar {
-      height: 20px;
-      background: #0f0;
-      border-radius: 5px;
-      width: 0%;
     }
 
     /* Color coding for sword attributes */
@@ -122,6 +147,10 @@
   </style>
 </head>
 <body>
+  <div class="exp-bar-container">
+    <div class="exp-bar" id="exp-bar"></div>
+  </div>
+
   <div class="container">
     <h1>Sword Factory Revamp</h1>
     <div class="sword-box">
@@ -151,9 +180,6 @@
 
     <div class="cash">Cash: $<span id="cash">0</span></div>
     <div class="exp">EXP: <span id="exp">0</span></div>
-    <div class="exp-bar-container">
-      <div class="exp-bar" id="exp-bar"></div>
-    </div>
     <div class="message" id="message"></div>
   </div>
 
