@@ -4,7 +4,6 @@ let currentSword = null;
 let level = 1;
 let exp = 0;
 let nextLevelExp = 100;
-let playerName = localStorage.getItem("playerName") || null;
 
 // DOM Elements
 const expBar = document.getElementById("exp-bar");
@@ -14,17 +13,6 @@ const swordDetailsEl = document.getElementById("sword-details");
 const swordMoldEl = document.getElementById("sword-mold");
 const swordValueEl = document.getElementById("sword-value");
 const playerNameEl = document.getElementById("player-name");
-
-// Prompt for player name if not set
-if (!playerName) {
-  playerName = prompt("Enter your player name:");
-  if (playerName) {
-    localStorage.setItem("playerName", playerName);
-  } else {
-    playerName = "Player";
-  }
-}
-playerNameEl.textContent = playerName;
 
 // Sword attributes
 const rarities = [
@@ -96,6 +84,32 @@ function displaySword() {
   swordValueEl.textContent = `$${formatNumber(currentSword.value)}`;
 }
 
+// Sell the current sword
+function sellSword() {
+  if (!currentSword) return alert("No sword to sell!");
+
+  cash += currentSword.value;
+  exp += Math.floor(currentSword.value / 10);
+  currentSword = null;
+  swordBox.style.display = "none";
+  updateExpBar();
+  alert(`Sword sold for $${cash}`);
+}
+
+// Upgrade quality
+function upgradeQuality() {
+  if (!currentSword) return alert("No sword to upgrade!");
+  if (currentSword.quality.multiplier >= qualities[qualities.length - 1].multiplier)
+    return alert("Sword quality is already at maximum!");
+
+  const currentIndex = qualities.findIndex(
+    (q) => q.name === currentSword.quality.name
+  );
+  currentSword.quality = qualities[currentIndex + 1];
+  displaySword();
+  alert("Sword quality upgraded!");
+}
+
 // Utility functions
 function getRandomElement(array) {
   return array[Math.floor(Math.random() * array.length)];
@@ -111,12 +125,7 @@ function formatNumber(number) {
 
 // Event listeners
 document.getElementById("generate-sword").addEventListener("click", generateSword);
-document.getElementById("sell-sword").addEventListener("click", () => {
-  if (!currentSword) return alert("No sword to sell!");
-  cash += currentSword.value;
-  exp += Math.floor(currentSword.value / 10);
-  currentSword = null;
-  swordBox.style.display = "none";
-  updateExpBar();
-  alert(`Sword sold for $${cash}`);
-});
+document.getElementById("sell-sword").addEventListener("click", sellSword);
+document.getElementById("upgrade-quality").addEventListener("click", upgradeQuality);
+document.getElementById("save-game").addEventListener("click", () => alert("Game saved!"));
+document.getElementById("load-game").addEventListener("click", () => alert("Game loaded!"));
