@@ -117,6 +117,12 @@
     .rare { color: #0000ff; }
     .epic { color: #800080; }
     .legendary { color: #ffa500; }
+
+    /* Mold-Specific Colors */
+    .bronze { color: #cd7f32; } /* Brown */
+    .silver { color: #c0c0c0; } /* Gray */
+    .gold { color: #ffd700; }   /* Yellow */
+    .diamond { color: #b9f2ff; } /* Light Blue */
   </style>
 </head>
 <body>
@@ -130,7 +136,7 @@
           <p id="level-rarity-quality">Level <span id="level" class="common">1</span> | <span id="rarity" class="common">Common</span> / <span id="quality" class="common">Fine</span></p>
         </div>
         <div class="sword-mold-value">
-          <span id="mold" class="common">Bronze</span> <span id="value">$1,234</span>
+          <span id="mold" class="bronze">Bronze</span> <span id="value">$1,234</span>
         </div>
       </div>
 
@@ -157,6 +163,7 @@
       <button id="toggle-leaderboard">Toggle Leaderboard</button>
     </div>
   </div>
+  <p id="message-box" style="text-align: center; font-size: 14px; height: 20px;"></p>
   <script src="script.js"></script>
 </body>
 </html>
