@@ -1,3 +1,8 @@
+
+a
+11:10 PM (0 minutes ago)
+to me
+
 const rarities = [
   { name: "Common", multiplier: 1, baseChance: 1 },
   { name: "Uncommon", multiplier: 2, baseChance: 0.5 },
@@ -192,5 +197,4 @@ function displaySword() {
 
   swordBox.style.display = "block";
   document.getElementById("sword-level").textContent = Math.floor(currentSword.value);
-  document.getElementById("sword-rarity").textContent = currentSword.rarity;
-  document.getElementById("sword-quality").
+ 
