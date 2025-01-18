@@ -173,20 +173,36 @@ function sellSword() {
   displayMessage(`Sword sold! Gained EXP and $${formatNumber(cash)}`);
 }
 
-// Upgrade quality
-function upgradeQuality() {
+// Upgrade rarity
+function upgradeRarity() {
   if (!currentSword) {
     displayMessage("No sword to upgrade!");
     return;
   }
-  if (currentSword.quality.name === qualities[qualities.length - 1].name) {
-    displayMessage("Sword quality is already at maximum!");
+  const currentIndex = rarities.findIndex(r => r.name === currentSword.rarity.name);
+  if (currentIndex === -1 || currentIndex === rarities.length - 1) {
+    displayMessage("Rarity is already at maximum!");
     return;
   }
-  const currentIndex = qualities.findIndex((q) => q.name === currentSword.quality.name);
-  currentSword.quality = qualities[currentIndex + 1];
+  currentSword.rarity = rarities[currentIndex + 1];
   displaySword();
-  displayMessage("Sword quality upgraded!");
+  displayMessage("Sword rarity upgraded!");
+}
+
+// Upgrade mold
+function upgradeMold() {
+  if (!currentSword) {
+    displayMessage("No sword to upgrade!");
+    return;
+  }
+  const currentIndex = molds.findIndex(m => m.name === currentSword.mold.name);
+  if (currentIndex === -1 || currentIndex === molds.length - 1) {
+    displayMessage("Mold is already at maximum!");
+    return;
+  }
+  currentSword.mold = molds[currentIndex + 1];
+  displaySword();
+  displayMessage("Sword mold upgraded!");
 }
 
 // Utility functions
@@ -206,6 +222,8 @@ function formatNumber(number) {
 document.getElementById("generate-sword").addEventListener("click", generateSword);
 document.getElementById("sell-sword").addEventListener("click", sellSword);
 document.getElementById("upgrade-quality").addEventListener("click", upgradeQuality);
+document.getElementById("upgrade-rarity").addEventListener("click", upgradeRarity);
+document.getElementById("upgrade-mold").addEventListener("click", upgradeMold);
 document.getElementById("save-game").addEventListener("click", saveGame);
 document.getElementById("load-game").addEventListener("click", loadGame);
 document.getElementById("toggle-leaderboard").addEventListener("click", displayLeaderboard);
