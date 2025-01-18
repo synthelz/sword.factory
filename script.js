@@ -7,8 +7,9 @@ let mold = "Bronze";
 let swordValue = 1234;
 let exp = 0;
 let expToLevelUp = 100;
+let leaderboard = [];
 
-// Rarity Data with Weights
+// Weighted Rarity Data
 const rarities = [
   { name: "Common", weight: 1 },
   { name: "Uncommon", weight: 32 },
@@ -31,7 +32,7 @@ const molds = [
   { name: "Diamond", weight: 91835 },
 ];
 
-// Utility: Weighted Random Selection
+// Weighted Random Function
 function weightedRandom(attributes) {
   const totalWeight = attributes.reduce((sum, attr) => sum + 1 / attr.weight, 0);
   const random = Math.random() * totalWeight;
@@ -48,116 +49,117 @@ function weightedRandom(attributes) {
 // Update the Sword GUI
 function updateGUI() {
   document.getElementById("player-name").textContent = `${playerName}'s Sword`;
-  document.getElementById("level-rarity-quality").textContent = `Level ${level} | ${rarity} / ${quality}`;
-  document.getElementById("mold-value").textContent = `${mold} ${swordValue.toLocaleString()}`;
+  document.getElementById("level-rarity-quality").innerHTML = `Level ${level} | <span id="rarity">${rarity}</span> / <span id="quality">${quality}</span>`;
+  document.getElementById("mold").textContent = mold;
+  document.getElementById("value").textContent = `$${swordValue.toLocaleString()}`;
   document.getElementById("exp-display").textContent = `EXP: ${exp} / ${expToLevelUp}`;
   document.getElementById("exp-bar-fill").style.width = `${(exp / expToLevelUp) * 100}%`;
 }
 
-// Display a Message
-function displayMessage(message, isSuccess = true) {
-  const messageElement = document.createElement("p");
-  messageElement.textContent = message;
-  messageElement.style.color = isSuccess ? "green" : "red";
-  document.querySelector(".game-container").appendChild(messageElement);
-
-  setTimeout(() => messageElement.remove(), 3000);
-}
-
 // Generate a New Sword
 function generateSword() {
-  const selectedRarity = weightedRandom(rarities);
-  const selectedQuality = weightedRandom(qualities);
-  const selectedMold = weightedRandom(molds);
+  rarity = weightedRandom(rarities).name;
+  quality = weightedRandom(qualities).name;
+  mold = weightedRandom(molds).name;
+  swordValue = Math.floor(Math.random() * 1000 + 1000);
 
-  rarity = selectedRarity.name;
-  quality = selectedQuality.name;
-  mold = selectedMold.name;
-  swordValue = Math.floor((Math.random() * 1000 + 1000) * (1 / selectedRarity.weight));
-
-  console.log("New sword generated!");
   updateGUI();
 }
 
 // Sell the Current Sword
 function sellSword() {
   if (swordValue === 0) {
-    displayMessage("No sword to sell!", false);
+    alert("No sword to sell!");
     return;
   }
 
   const expGain = Math.floor(swordValue / 10);
   exp += expGain;
 
+  // Handle leveling up
   while (exp >= expToLevelUp) {
     exp -= expToLevelUp;
     expToLevelUp = Math.floor(expToLevelUp * 1.5);
     level++;
-    displayMessage(`Level Up! New Level: ${level}`);
+    alert(`Congratulations! You've leveled up to Level ${level}!`);
   }
 
-  displayMessage(`Sword sold for ${swordValue}! Gained ${expGain} EXP.`);
+  alert(`Sword sold for $${swordValue}! Gained ${expGain} EXP.`);
   swordValue = 0; // Reset sword value after selling
   updateGUI();
 }
 
-// Upgrade Sword Quality
+// Upgrade Logic
+function upgradeAttribute(attributeList, currentAttribute, attributeName) {
+  const currentIndex = attributeList.findIndex(attr => attr.name === currentAttribute);
+  if (currentIndex === attributeList.length - 1) {
+    alert(`${attributeName} is already at maximum!`);
+    return currentAttribute;
+  }
+
+  const chance = 1 / attributeList[currentIndex + 1].weight;
+  if (Math.random() <= chance) {
+    alert(`${attributeName} upgraded successfully!`);
+    return attributeList[currentIndex + 1].name;
+  } else {
+    alert(`${attributeName} upgrade failed!`);
+    return currentAttribute;
+  }
+}
+
 function upgradeQuality() {
-  const currentIndex = qualities.findIndex(q => q.name === quality);
-  if (currentIndex === qualities.length - 1) {
-    displayMessage("Quality is already at maximum!", false);
-    return;
-  }
-
-  const chance = 1 / qualities[currentIndex + 1].weight;
-  if (Math.random() <= chance) {
-    quality = qualities[currentIndex + 1].name;
-    swordValue += 500;
-    displayMessage("Sword quality upgraded!");
-  } else {
-    displayMessage("Upgrade failed!", false);
-  }
-
+  quality = upgradeAttribute(qualities, quality, "Quality");
   updateGUI();
 }
 
-// Upgrade Sword Rarity
 function upgradeRarity() {
-  const currentIndex = rarities.findIndex(r => r.name === rarity);
-  if (currentIndex === rarities.length - 1) {
-    displayMessage("Rarity is already at maximum!", false);
-    return;
-  }
-
-  const chance = 1 / rarities[currentIndex + 1].weight;
-  if (Math.random() <= chance) {
-    rarity = rarities[currentIndex + 1].name;
-    swordValue += 1000;
-    displayMessage("Sword rarity upgraded!");
-  } else {
-    displayMessage("Upgrade failed!", false);
-  }
-
+  rarity = upgradeAttribute(rarities, rarity, "Rarity");
   updateGUI();
 }
 
-// Upgrade Sword Mold
 function upgradeMold() {
-  const currentIndex = molds.findIndex(m => m.name === mold);
-  if (currentIndex === molds.length - 1) {
-    displayMessage("Mold is already at maximum!", false);
+  mold = upgradeAttribute(molds, mold, "Mold");
+  updateGUI();
+}
+
+// Save Game
+function saveGame() {
+  const saveData = {
+    playerName,
+    level,
+    rarity,
+    quality,
+    mold,
+    swordValue,
+    exp,
+    expToLevelUp,
+    leaderboard,
+  };
+
+  localStorage.setItem("swordGameSave", JSON.stringify(saveData));
+  alert("Game saved successfully!");
+}
+
+// Load Game
+function loadGame() {
+  const saveData = JSON.parse(localStorage.getItem("swordGameSave"));
+
+  if (!saveData) {
+    alert("No saved game found!");
     return;
   }
 
-  const chance = 1 / molds[currentIndex + 1].weight;
-  if (Math.random() <= chance) {
-    mold = molds[currentIndex + 1].name;
-    swordValue += 1500;
-    displayMessage("Sword mold upgraded!");
-  } else {
-    displayMessage("Upgrade failed!", false);
-  }
+  playerName = saveData.playerName;
+  level = saveData.level;
+  rarity = saveData.rarity;
+  quality = saveData.quality;
+  mold = saveData.mold;
+  swordValue = saveData.swordValue;
+  exp = saveData.exp;
+  expToLevelUp = saveData.expToLevelUp;
+  leaderboard = saveData.leaderboard;
 
+  alert("Game loaded successfully!");
   updateGUI();
 }
 
@@ -167,6 +169,8 @@ document.getElementById("sell-sword").addEventListener("click", sellSword);
 document.getElementById("upgrade-quality").addEventListener("click", upgradeQuality);
 document.getElementById("upgrade-rarity").addEventListener("click", upgradeRarity);
 document.getElementById("upgrade-mold").addEventListener("click", upgradeMold);
+document.getElementById("save-game").addEventListener("click", saveGame);
+document.getElementById("load-game").addEventListener("click", loadGame);
 
-// Initialize the Game
+// Initialize
 updateGUI();
