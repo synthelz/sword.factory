@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sword Factory Revamp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      font-family: 'Press Start 2P', sans-serif;
+      background: linear-gradient(135deg, #0f0f1e, #1a1a2e, #2a2a3e);
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
       color: #fff;
@@ -27,7 +28,7 @@
       top: 0;
       left: 0;
       width: 100%;
-      background: #333;
+      background: #222;
       height: 25px;
     }
 
@@ -43,7 +44,7 @@
     }
 
     h1 {
-      font-size: 32px;
+      font-size: 24px;
       color: #ffcc00;
       margin-bottom: 20px;
     }
@@ -62,16 +63,16 @@
 
     .sword-box h2 {
       margin: 0 0 10px;
-      font-size: 20px;
+      font-size: 18px;
     }
 
     .sword-box .level-rarity {
-      font-size: 16px;
+      font-size: 14px;
       margin-bottom: 10px;
     }
 
     .sword-box .attributes {
-      font-size: 14px;
+      font-size: 12px;
       text-align: left;
       margin: 10px 0;
     }
@@ -82,7 +83,7 @@
     }
 
     .sword-box .attributes .enchant {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: bold;
       color: #ffa500;
     }
@@ -91,7 +92,7 @@
       position: absolute;
       bottom: 10px;
       right: 10px;
-      font-size: 18px;
+      font-size: 14px;
       font-weight: bold;
     }
 
@@ -106,24 +107,26 @@
       color: #fff;
       border: none;
       border-radius: 5px;
-      font-size: 14px;
+      font-size: 12px;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
 
     .buttons button:hover {
       background: #555;
+      transform: scale(1.05);
     }
 
     .cash, .exp {
       margin-top: 20px;
-      font-size: 18px;
+      font-size: 14px;
       font-weight: bold;
     }
 
     .message {
       margin-top: 10px;
       color: #0f0;
-      font-size: 16px;
+      font-size: 12px;
     }
 
     /* Color coding for sword attributes */
@@ -179,7 +182,7 @@
       <button onclick="upgradeSword('enchant')">Upgrade Enchants</button>
     </div>
 
-    <div class="cash">Cash: $<span id="cash">0</span></div>
+    <div class="cash">Cash: <span id="cash">0</span></div>
     <div class="exp">EXP: <span id="exp">0</span></div>
     <div class="message" id="message"></div>
   </div>
