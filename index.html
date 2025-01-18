@@ -3,188 +3,134 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sword Factory Revamp</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <title>Sword Generator</title>
   <style>
     body {
-      font-family: 'Press Start 2P', sans-serif;
-      background: linear-gradient(135deg, #0f0f1e, #1a1a2e, #2a2a3e);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      color: #fff;
+      font-family: 'Arial Black', sans-serif;
+      background: linear-gradient(to bottom, #1e1e2f, #121212);
+      color: white;
       margin: 0;
       padding: 0;
       text-align: center;
     }
 
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
     .exp-bar-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: #222;
-      height: 25px;
+      width: 80%;
+      height: 30px;
+      background: #333;
+      border-radius: 15px;
+      margin: 20px auto;
+      position: relative;
     }
 
     .exp-bar {
       height: 100%;
-      background: yellow;
+      background: linear-gradient(to right, #ffd700, #ffa500);
+      border-radius: 15px;
       width: 0%;
-      transition: width 0.3s ease;
+      transition: width 0.5s ease;
     }
 
-    .container {
-      padding: 20px;
-    }
-
-    h1 {
-      font-size: 24px;
-      color: #ffcc00;
-      margin-bottom: 20px;
-    }
-
-    .sword-box {
-      background: #222;
-      color: #fff;
-      padding: 20px;
-      margin: 20px auto;
-      width: 300px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-      position: relative;
-      display: none;
-    }
-
-    .sword-box h2 {
-      margin: 0 0 10px;
-      font-size: 18px;
-    }
-
-    .sword-box .level-rarity {
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-
-    .sword-box .attributes {
-      font-size: 12px;
-      text-align: left;
-      margin: 10px 0;
-    }
-
-    .sword-box .attributes span {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .sword-box .attributes .enchant {
-      font-size: 12px;
-      font-weight: bold;
-      color: #ffa500;
-    }
-
-    .sword-box .mold {
+    .exp-text {
       position: absolute;
-      bottom: 10px;
-      right: 10px;
-      font-size: 14px;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
       font-weight: bold;
     }
 
-    .buttons {
+    .button-container {
       margin: 20px 0;
     }
 
-    .buttons button {
-      margin: 10px;
+    button {
+      font-size: 16px;
       padding: 10px 20px;
+      margin: 10px;
       background: #444;
-      color: #fff;
+      color: white;
       border: none;
       border-radius: 5px;
-      font-size: 12px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: background 0.3s;
     }
 
-    .buttons button:hover {
+    button:hover {
       background: #555;
-      transform: scale(1.05);
     }
 
-    .cash, .exp {
-      margin-top: 20px;
-      font-size: 14px;
+    .sword-box {
+      display: none;
+      margin: 20px auto;
+      padding: 20px;
+      width: 80%;
+      max-width: 500px;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .sword-name {
+      font-size: 24px;
       font-weight: bold;
     }
 
-    .message {
-      margin-top: 10px;
-      color: #0f0;
-      font-size: 12px;
+    .sword-details {
+      margin-top: 15px;
     }
 
-    /* Color coding for sword attributes */
-    .common { color: gray; }
-    .uncommon { color: green; }
-    .rare { color: blue; }
-    .epic { color: purple; }
-    .legendary { color: gold; }
-    .mythical { color: #a855f7; }
-    .ascendant { color: #ff69b4; }
-    .transcendent { color: #ff1493; }
-    .divine { color: #ff0000; }
-    .normal { color: white; }
-    .bronze { color: #cd7f32; }
-    .silver { color: #c0c0c0; }
-    .gold { color: #ffd700; }
-    .sapphire { color: #0f52ba; }
-    .emerald { color: #50c878; }
-    .ruby { color: #e0115f; }
-    .amethyst { color: #9966cc; }
-    .diamond { color: #b9f2ff; }
+    .sword-detail {
+      font-size: 18px;
+      margin: 5px 0;
+    }
+
+    .mold-display {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .cash-display {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
+  <h1 id="username">PlayerName</h1>
+
   <div class="exp-bar-container">
     <div class="exp-bar" id="exp-bar"></div>
+    <div class="exp-text" id="exp-text">0 / 100 EXP</div>
   </div>
 
-  <div class="container">
-    <h1>Sword Factory Revamp</h1>
-    <div class="sword-box">
-      <h2><span id="player-name">Player's</span> Sword</h2>
-      <div class="level-rarity">
-        Level <span id="sword-level">1</span> | <span id="sword-rarity" class="normal">Normal</span>
-      </div>
-      <div class="attributes">
-        <span id="sword-quality">Normal</span>
-        <span class="enchant">Resistance: <span id="enchant1">0</span></span>
-        <span class="enchant">Greed++: <span id="enchant2">0</span></span>
-        <span class="enchant">Sharpness: <span id="enchant3">0</span></span>
-      </div>
-      <div class="mold" id="sword-mold">Normal</div>
-    </div>
+  <div class="button-container">
+    <button id="generate-sword">Generate Sword</button>
+    <button id="sell-sword">Sell Sword</button>
+    <button id="upgrade-quality">Upgrade Quality</button>
+    <button id="upgrade-rarity">Upgrade Rarity</button>
+    <button id="upgrade-enchants">Upgrade Enchants</button>
+    <button id="save-game">Save</button>
+    <button id="load-game">Load</button>
+  </div>
 
-    <div class="buttons">
-      <button id="generateSword()">Generate Sword</button>
-      <button id="sellSword()">Sell Sword</button>
-      <button id="saveGame()">Save Game</button>
-      <button id="loadGame()">Load Game</button>
-      <button id="upgradeSword('quality')">Upgrade Quality</button>
-      <button id="upgradeSword('rarity')">Upgrade Rarity</button>
-      <button id="upgradeSword('mold')">Upgrade Mold</button>
-      <button id="upgradeSword('enchant')">Upgrade Enchants</button>
+  <div class="sword-box" id="sword-box">
+    <div class="sword-name" id="sword-name">Sword Name</div>
+    <div class="sword-details">
+      <div class="sword-detail" id="sword-rarity">Rarity: Common</div>
+      <div class="sword-detail" id="sword-quality">Quality: Poor</div>
+      <div class="sword-detail" id="sword-enchants">
+        Enchants: Swiftness I, Resistance I, Surprise I
+      </div>
+      <div class="cash-display" id="sword-value">$0</div>
     </div>
-
-    <div class="cash">Cash: <span id="cash">0</span></div>
-    <div class="exp">EXP: <span id="exp">0</span></div>
-    <div class="message" id="message"></div>
+    <div class="mold-display" id="sword-mold">Mold: Normal</div>
   </div>
 
   <script src="script.js"></script>
