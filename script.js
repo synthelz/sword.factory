@@ -37,7 +37,7 @@ let level = 1;
 let currentSword = null;
 
 function calculateLevel() {
-  return Math.floor(1 + Math.sqrt(exp / 100));
+  return Math.floor(1 + Math.sqrt(exp / 150)); // Quadratic EXP scaling
 }
 
 function updateLevel() {
@@ -49,8 +49,8 @@ function updateLevel() {
 }
 
 function updateExpBar() {
-  const nextLevelExp = (level * level) * 100;
-  const currentLevelExp = exp - ((level - 1) * (level - 1) * 100);
+  const currentLevelExp = exp - ((level - 1) * (level - 1) * 150);
+  const nextLevelExp = (level * level) * 150;
   const percentage = (currentLevelExp / nextLevelExp) * 100;
   document.getElementById("exp-bar").style.width = `${percentage}%`;
 }
@@ -77,8 +77,11 @@ function generateSword() {
 
   currentSword = {
     rarity: rarity.name,
+    rarityMultiplier: rarity.multiplier,
     mold: mold.name,
+    moldMultiplier: mold.multiplier,
     quality: quality.name,
+    qualityMultiplier: quality.multiplier,
     value: value,
     enchants: { enchant1: 0, enchant2: 0, enchant3: 0 }
   };
@@ -93,13 +96,20 @@ function sellSword() {
     return;
   }
 
+  const expGained = Math.floor(
+    (currentSword.value / 10) *
+    currentSword.rarityMultiplier *
+    currentSword.qualityMultiplier
+  );
+
   cash += currentSword.value;
-  exp += currentSword.value / 2;
+  exp += expGained;
+
   currentSword = null;
   updateCash();
   updateExpBar();
   updateLevel();
-  displayMessage("Sword sold! Gained EXP and cash.");
+  displayMessage(`Sword sold! Gained ${expGained} EXP and $${cash}.`);
   displaySword();
 }
 
@@ -138,6 +148,7 @@ function tryUpgrade(attributeList, attributeKey) {
   const nextAttribute = attributeList[currentIndex + 1];
   if (Math.random() <= nextAttribute.baseChance) {
     currentSword[attributeKey] = nextAttribute.name;
+    currentSword[`${attributeKey}Multiplier`] = nextAttribute.multiplier;
     currentSword.value *= nextAttribute.multiplier / attributeList[currentIndex].multiplier;
     return true;
   }
