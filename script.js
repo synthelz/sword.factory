@@ -32,7 +32,28 @@ const qualities = [
 ];
 
 let cash = 0;
+let exp = 0;
+let level = 1;
 let currentSword = null;
+
+function calculateLevel() {
+  return Math.floor(1 + Math.sqrt(exp / 100));
+}
+
+function updateLevel() {
+  const newLevel = calculateLevel();
+  if (newLevel > level) {
+    level = newLevel;
+    displayMessage(`Congratulations! You've reached Level ${level}!`);
+  }
+}
+
+function updateExpBar() {
+  const nextLevelExp = (level * level) * 100;
+  const currentLevelExp = exp - ((level - 1) * (level - 1) * 100);
+  const percentage = (currentLevelExp / nextLevelExp) * 100;
+  document.getElementById("exp-bar").style.width = `${percentage}%`;
+}
 
 function weightedRandom(attributes) {
   const totalWeight = attributes.reduce((sum, attr) => sum + attr.baseChance, 0);
@@ -73,9 +94,12 @@ function sellSword() {
   }
 
   cash += currentSword.value;
-  displayMessage(`Sold sword for $${currentSword.value}!`);
+  exp += currentSword.value / 2;
   currentSword = null;
   updateCash();
+  updateExpBar();
+  updateLevel();
+  displayMessage("Sword sold! Gained EXP and cash.");
   displaySword();
 }
 
@@ -139,9 +163,11 @@ function displaySword() {
   }
 
   swordBox.style.display = "block";
-  document.getElementById("sword-quality").textContent = `Quality: ${currentSword.quality}`;
+  document.getElementById("sword-quality").textContent = currentSword.quality;
   document.getElementById("sword-rarity").textContent = currentSword.rarity;
-  document.getElementById("sword-mold").textContent = `Mold: ${currentSword.mold}`;
+  document.getElementById("sword-rarity").className = currentSword.rarity.toLowerCase();
+  document.getElementById("sword-mold").textContent = currentSword.mold;
+  document.getElementById("sword-mold").className = currentSword.mold.toLowerCase();
   document.getElementById("enchant1").textContent = currentSword.enchants.enchant1;
   document.getElementById("enchant2").textContent = currentSword.enchants.enchant2;
   document.getElementById("enchant3").textContent = currentSword.enchants.enchant3;
@@ -151,13 +177,8 @@ function updateCash() {
   document.getElementById("cash").textContent = cash;
 }
 
-function displayMessage(message) {
-  document.getElementById("message").textContent = message;
-}
-
-// Save and load game state
 function saveGame() {
-  const gameState = { cash, currentSword };
+  const gameState = { cash, exp, level, currentSword };
   localStorage.setItem("swordFactoryGame", JSON.stringify(gameState));
   displayMessage("Game saved successfully!");
 }
@@ -165,13 +186,20 @@ function saveGame() {
 function loadGame() {
   const savedState = localStorage.getItem("swordFactoryGame");
   if (savedState) {
-    const { cash: savedCash, currentSword: savedSword } = JSON.parse(savedState);
+    const { cash: savedCash, exp: savedExp, level: savedLevel, currentSword: savedSword } = JSON.parse(savedState);
     cash = savedCash || 0;
+    exp = savedExp || 0;
+    level = savedLevel || 1;
     currentSword = savedSword || null;
     updateCash();
+    updateExpBar();
     displaySword();
     displayMessage("Game loaded successfully!");
   } else {
     displayMessage("No saved game found.");
   }
+}
+
+function displayMessage(message) {
+  document.getElementById("message").textContent = message;
 }
