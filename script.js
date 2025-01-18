@@ -192,4 +192,3 @@ function displaySword() {
 
   swordBox.style.display = "block";
   document.getElementById("sword-level").textContent = Math.floor(currentSword.value);
- 
