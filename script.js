@@ -20,23 +20,6 @@ const molds = [
   { name: "Ruby", multiplier: 100, baseChance: 0.015625 },
   { name: "Amethyst", multiplier: 145, baseChance: 0.0078125 },
   { name: "Diamond", multiplier: 190, baseChance: 0.00390625 },
-  { name: "Opal", multiplier: 250, baseChance: 0.001953125 },
-  { name: "Uranium", multiplier: 300, baseChance: 0.0009765625 },
-  { name: "Crystal", multiplier: 350, baseChance: 0.00048828125 },
-  { name: "Moonstone", multiplier: 420, baseChance: 0.000244140625 },
-  { name: "Topaz", multiplier: 490, baseChance: 0.0001220703125 },
-  { name: "Painite", multiplier: 700, baseChance: 0.00006103515625 },
-  { name: "Anhydrite", multiplier: 850, baseChance: 0.000030517578125 },
-  { name: "Azure", multiplier: 950, baseChance: 0.0000152587890625 },
-  { name: "Volcanic", multiplier: 1175, baseChance: 0.00000762939453125 },
-  { name: "Jade", multiplier: 1200, baseChance: 0.000003814697265625 },
-  { name: "Shale", multiplier: 1250, baseChance: 0.0000019073486328125 },
-  { name: "Platinum", multiplier: 1300, baseChance: 0.00000095367431640625 },
-  { name: "Quartz", multiplier: 1400, baseChance: 0.000000476837158203125 },
-  { name: "Asgarite", multiplier: 1500, baseChance: 0.0000002384185791015625 },
-  { name: "Stardust", multiplier: 1750, baseChance: 0.00000011920928955078125 },
-  { name: "Zeolite", multiplier: 1900, baseChance: 0.000000059604644775390625 },
-  { name: "Ammolite", multiplier: 2100, baseChance: 0.0000000298023223876953125 }
 ];
 
 const qualities = [
@@ -50,6 +33,19 @@ const qualities = [
 
 let cash = 0;
 let currentSword = null;
+
+function weightedRandom(attributes) {
+  const totalWeight = attributes.reduce((sum, attribute) => sum + attribute.baseChance, 0);
+  const random = Math.random() * totalWeight;
+  let weightSum = 0;
+
+  for (let attribute of attributes) {
+    weightSum += attribute.baseChance;
+    if (random <= weightSum) {
+      return attribute;
+    }
+  }
+}
 
 function generateSword() {
   const rarity = weightedRandom(rarities);
@@ -84,111 +80,73 @@ function saveSword() {
   displayMessage("Sword saved successfully!");
 }
 
-function upgradeSword(type) {
-  if (!currentSword) {
-    displayMessage("Produce a sword first!");
-    return;
-  }
-
+function upgradeSword(attribute) {
   let success = false;
-
-  // Upgrade Quality
-  if (type === "quality") {
-    const currentQualityIndex = qualities.findIndex(q => q.name === currentSword.quality);
-    if (currentQualityIndex < qualities.length - 1) {
-      const nextQuality = qualities[currentQualityIndex + 1];
-      success = Math.random() < nextQuality.baseChance;
-      if (success) {
-        currentSword.quality = nextQuality.name;
-        displayMessage(`Quality upgraded to ${nextQuality.name}!`);
-      } else {
-        displayMessage(`Failed to upgrade quality.`);
-      }
-    } else {
-      displayMessage("Quality is already at the highest tier!");
-    }
+  if (attribute === 'quality') {
+    success = tryUpgrade(qualities);
+    if (success) currentSword.quality = success.name;
+  } else if (attribute === 'rarity') {
+    success = tryUpgrade(rarities);
+    if (success) currentSword.rarity = success.name;
+  } else if (attribute === 'mold') {
+    success = tryUpgrade(molds);
+    if (success) currentSword.mold = success.name;
+  } else if (attribute === 'enchant') {
+    success = tryUpgradeEnchant();
+    if (success) updateEnchantments();
   }
 
-  // Upgrade Rarity
-  if (type === "rarity") {
-    const currentRarityIndex = rarities.findIndex(r => r.name === currentSword.rarity);
-    if (currentRarityIndex < rarities.length - 1) {
-      const nextRarity = rarities[currentRarityIndex + 1];
-      success = Math.random() < nextRarity.baseChance;
-      if (success) {
-        currentSword.rarity = nextRarity.name;
-        displayMessage(`Rarity upgraded to ${nextRarity.name}!`);
-      } else {
-        displayMessage(`Failed to upgrade rarity.`);
-      }
-    } else {
-      displayMessage("Rarity is already at the highest tier!");
-    }
-  }
-
-  // Upgrade Mold
-  if (type === "mold") {
-    const currentMoldIndex = molds.findIndex(m => m.name === currentSword.mold);
-    if (currentMoldIndex < molds.length - 1) {
-      const nextMold = molds[currentMoldIndex + 1];
-      success = Math.random() < nextMold.baseChance;
-      if (success) {
-        currentSword.mold = nextMold.name;
-        displayMessage(`Mold upgraded to ${nextMold.name}!`);
-      } else {
-        displayMessage(`Failed to upgrade mold.`);
-      }
-    } else {
-      displayMessage("Mold is already at the highest tier!");
-    }
-  }
-
-  // Upgrade Enchants
-  if (type === "enchant") {
-    // Randomly pick one enchantment to upgrade
-    const enchantmentId = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3
-    const enchantName = `enchant${enchantmentId}`;
-    const enchantChance = 0.2; // 20% chance for any enchantment upgrade
-
-    success = Math.random() < enchantChance;
-    if (success) {
-      // Assign a random enchantment value
-      document.getElementById(enchantName).textContent = Math.floor(Math.random() * 100) + 1;
-      displayMessage(`${enchantName} upgraded successfully!`);
-    } else {
-      displayMessage(`Failed to upgrade ${enchantName}.`);
-    }
-  }
-
-  // If any upgrade was successful, update sword display
   if (success) {
-    displaySword();
-    updateCash();
+    displayMessage(`${attribute.charAt(0).toUpperCase() + attribute.slice(1)} upgraded successfully!`);
+  } else {
+    displayMessage(`Upgrade failed for ${attribute}.`);
   }
 }
 
-function weightedRandom(list) {
-  let totalWeight = 0;
-  for (const item of list) {
-    totalWeight += item.baseChance;
-    item.cumulativeWeight = totalWeight;
-  }
-  const random = Math.random() * totalWeight;
-  for (const item of list) {
-    if (random < item.cumulativeWeight) {
-      return item;
+function tryUpgrade(attributeList) {
+  const currentAttribute = attributeList.find(attr => attr.name === currentSword[attributeList[0].name]);
+  const nextIndex = attributeList.indexOf(currentAttribute) + 1;
+
+  if (nextIndex < attributeList.length) {
+    const nextAttribute = attributeList[nextIndex];
+    if (Math.random() <= nextAttribute.baseChance) {
+      return nextAttribute;
     }
   }
-  return list[0];
+  return null;
+}
+
+function tryUpgradeEnchant() {
+  const enchantmentChance = 0.2; // Example chance for successful enchantment upgrade
+  if (Math.random() <= enchantmentChance) {
+    return true;
+  }
+  return false;
+}
+
+function updateEnchantments() {
+  const enchantments = ['enchant1', 'enchant2', 'enchant3'];
+  enchantments.forEach((enchant, index) => {
+    document.getElementById(enchant).textContent = `Enchant ${index + 1}: Updated`;
+  });
 }
 
 function displaySword() {
-  const swordBox = document.querySelector(".sword-box");
-
   if (!currentSword) {
-    swordBox.style.display = "none";
+    document.querySelector(".sword-box").style.display = "none";
     return;
   }
 
-  swordBox.style.display = "block";
-  document.getElementById("sword-level").textContent = Math.floor(currentSword.value);
+  document.querySelector(".sword-box").style.display = "block";
+  document.getElementById("sword-quality").textContent = `Quality: ${currentSword.quality}`;
+  document.getElementById("sword-rarity").textContent = currentSword.rarity;
+  document.getElementById("sword-mold").textContent = `Mold: ${currentSword.mold}`;
+}
+
+function updateCash() {
+  document.getElementById("cash").textContent = cash;
+}
+
+function displayMessage(message) {
+  document.getElementById("message").textContent = message;
+}
