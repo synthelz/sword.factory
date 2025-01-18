@@ -19,8 +19,7 @@
 
     .game-container {
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      justify-content: center;
       width: 90%;
       margin-top: 20px;
     }
@@ -163,13 +162,14 @@
       <button id="load-game">Load Game</button>
       <button id="toggle-leaderboard">Toggle Leaderboard</button>
     </div>
-
-    <!-- Leaderboard -->
-    <div id="leaderboard" style="display: none; margin-top: 20px; color: white;">
-      <h2>Leaderboard</h2>
-      <ol id="leaderboard-list"></ol>
-    </div>
   </div>
+
+  <!-- Leaderboard -->
+  <div id="leaderboard" style="display: none; margin-top: 20px; color: white;">
+    <h2>Leaderboard</h2>
+    <ol id="leaderboard-list"></ol>
+  </div>
+
   <p id="message-box" style="text-align: center; font-size: 14px; height: 20px;"></p>
   <script src="script.js"></script>
 </body>
