@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sword Game</title>
   <style>
+    /* CSS Styles */
     body {
       font-family: Arial, sans-serif;
-      background: #1e1e1e;
+      background-color: #1e1e1e;
       color: white;
       margin: 0;
       padding: 0;
@@ -28,30 +29,25 @@
       background-color: #2a2a2a;
       padding: 10px;
       position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
     }
 
     .sword-gui h2 {
-      font-size: 18px;
+      font-size: 16px;
       margin: 0;
-      padding: 0;
       text-align: left;
     }
 
-    .sword-info {
-      text-align: left;
+    .sword-gui p {
+      margin: 5px 0;
       font-size: 14px;
-      margin-top: 10px;
+      text-align: left;
     }
 
     .sword-mold-value {
-      font-size: 12px;
-      text-align: right;
       position: absolute;
       bottom: 10px;
       right: 10px;
+      font-size: 12px;
     }
 
     .button-container {
@@ -109,21 +105,22 @@
 </head>
 <body>
   <div class="game-container">
+    <!-- Sword GUI -->
     <div class="sword-gui">
-      <h2 id="player-name">Player Name's Sword</h2>
-      <div class="sword-info">
-        <p id="level-rarity-quality">Level 1 | Common / Fine</p>
-      </div>
+      <h2 id="player-name">Player's Sword</h2>
+      <p id="level-rarity-quality">Level 1 | Common / Fine</p>
       <div class="sword-mold-value">
         <p id="mold-value">Bronze 1,234</p>
       </div>
     </div>
 
+    <!-- EXP Bar -->
     <div class="exp-bar">
       <div class="exp-bar-fill" id="exp-bar-fill"></div>
     </div>
     <p id="exp-display">EXP: 0 / 100</p>
 
+    <!-- Buttons -->
     <div class="button-container">
       <button id="generate-sword">Generate Sword</button>
       <button id="sell-sword">Sell Sword</button>
@@ -135,6 +132,7 @@
       <button id="toggle-leaderboard">Toggle Leaderboard</button>
     </div>
 
+    <!-- Leaderboard -->
     <div id="leaderboard">
       <h3>Leaderboard</h3>
       <ul id="leaderboard-list">
@@ -144,5 +142,6 @@
       <button id="close-leaderboard">Close</button>
     </div>
   </div>
+  <script src="script.js"></script>
 </body>
 </html>
