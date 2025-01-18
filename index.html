@@ -71,26 +71,16 @@
       background: rgba(0, 0, 0, 0.8);
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-    }
-
-    .sword-name {
-      font-size: 24px;
-      font-weight: bold;
+      text-align: center;
     }
 
     .sword-details {
+      font-size: 20px;
       margin-top: 15px;
     }
 
-    .sword-detail {
-      font-size: 18px;
-      margin: 5px 0;
-    }
-
     .mold-display {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
+      margin-top: 10px;
       font-size: 18px;
       font-weight: bold;
     }
@@ -103,7 +93,7 @@
   </style>
 </head>
 <body>
-  <h1 id="username">PlayerName</h1>
+  <h1 id="player-name"></h1>
 
   <div class="exp-bar-container">
     <div class="exp-bar" id="exp-bar"></div>
@@ -111,26 +101,16 @@
   </div>
 
   <div class="button-container">
-  <button id="generate-sword">Generate Sword</button>
-  <button id="sell-sword">Sell Sword</button>
-  <button id="upgrade-quality">Upgrade Quality</button>
-  <button id="upgrade-rarity">Upgrade Rarity</button>
-  <button id="upgrade-enchants">Upgrade Enchants</button>
-  <button id="save-game">Save</button>
-  <button id="load-game">Load</button>
-</div>
+    <button id="generate-sword">Generate Sword</button>
+    <button id="sell-sword">Sell Sword</button>
+    <button id="save-game">Save</button>
+    <button id="load-game">Load</button>
+  </div>
 
   <div class="sword-box" id="sword-box">
-    <div class="sword-name" id="sword-name">Sword Name</div>
-    <div class="sword-details">
-      <div class="sword-detail" id="sword-rarity">Rarity: Common</div>
-      <div class="sword-detail" id="sword-quality">Quality: Poor</div>
-      <div class="sword-detail" id="sword-enchants">
-        Enchants: Swiftness I, Resistance I, Surprise I
-      </div>
-      <div class="cash-display" id="sword-value">$0</div>
-    </div>
-    <div class="mold-display" id="sword-mold">Mold: Normal</div>
+    <div class="sword-details" id="sword-details"></div>
+    <div class="mold-display" id="sword-mold"></div>
+    <div class="cash-display" id="sword-value"></div>
   </div>
 
   <script src="script.js"></script>
