@@ -26,19 +26,231 @@ if (!playerName) {
 }
 playerNameEl.textContent = playerName || "Player";
 
-// Sword attributes
-const rarities = [...];
-const molds = [...];
-const qualities = [...];
+// Auto-save every 30 seconds
+setInterval(autoSaveGame, 30000);
 
-// Update Sword
+// Sword attributes
+const rarities = [
+  { name: "Common", multiplier: 1, baseChance: 1, color: "#cccccc" },
+  { name: "Uncommon", multiplier: 2, baseChance: 0.5, color: "#00ff00" },
+  { name: "Rare", multiplier: 5, baseChance: 0.25, color: "#0000ff" },
+  { name: "Epic", multiplier: 20, baseChance: 0.125, color: "#800080" },
+  { name: "Legendary", multiplier: 100, baseChance: 0.0625, color: "#ffa500" }
+];
+
+const molds = [
+  { name: "Normal", multiplier: 1, baseChance: 1, color: "#cccccc" },
+  { name: "Bronze", multiplier: 2, baseChance: 0.5, color: "#cd7f32" },
+  { name: "Silver", multiplier: 4, baseChance: 0.25, color: "#c0c0c0" },
+  { name: "Gold", multiplier: 10, baseChance: 0.125, color: "#ffd700" },
+  { name: "Diamond", multiplier: 50, baseChance: 0.0625, color: "#b9f2ff" }
+];
+
+const qualities = [
+  { name: "Poor", multiplier: 0.5, baseChance: 1, color: "#cccccc" },
+  { name: "Fine", multiplier: 1, baseChance: 0.5, color: "#00ff00" },
+  { name: "Pristine", multiplier: 2, baseChance: 0.25, color: "#0000ff" },
+  { name: "Masterwork", multiplier: 5, baseChance: 0.125, color: "#800080" }
+];
+
+// Update EXP bar
+function updateExpBar() {
+  while (exp >= nextLevelExp) {
+    levelUp();
+  }
+  const percentage = (exp / nextLevelExp) * 100;
+  expBar.style.width = `${percentage}%`;
+  expText.textContent = `${exp} / ${nextLevelExp} EXP`;
+}
+
+// Level up
+function levelUp() {
+  level++;
+  exp -= nextLevelExp;
+  nextLevelExp = Math.floor(nextLevelExp * 1.5);
+  displayMessage(`Level Up! You are now Level ${level}!`);
+}
+
+// Auto-save game
+function autoSaveGame() {
+  saveGame();
+  displayMessage("Game auto-saved!");
+}
+
+// Save the game
+function saveGame() {
+  const saveData = {
+    cash,
+    level,
+    exp,
+    nextLevelExp,
+    playerName
+  };
+  localStorage.setItem("swordGameSave", JSON.stringify(saveData));
+  displayMessage("Game saved!");
+}
+
+// Load the game
+function loadGame() {
+  const saveData = JSON.parse(localStorage.getItem("swordGameSave"));
+  if (!saveData) {
+    displayMessage("No save found!");
+    return;
+  }
+
+  cash = saveData.cash || 0;
+  level = saveData.level || 1;
+  exp = saveData.exp || 0;
+  nextLevelExp = saveData.nextLevelExp || 100;
+  playerName = saveData.playerName || "Player";
+
+  updateExpBar();
+  displayMessage("Game loaded!");
+}
+
+// Update leaderboard
+function updateLeaderboard() {
+  leaderboard.push({ name: playerName, cash });
+  leaderboard.sort((a, b) => b.cash - a.cash);
+  leaderboard = leaderboard.slice(0, 10); // Keep top 10
+  localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+  displayLeaderboard();
+}
+
+// Display leaderboard
+function displayLeaderboard() {
+  leaderboardEl.style.display = leaderboardEl.style.display === "block" ? "none" : "block";
+  leaderboardListEl.innerHTML = leaderboard
+    .map((entry, index) => `<li>${index + 1}. ${entry.name} - $${formatNumber(entry.cash)}</li>`)
+    .join("");
+}
+
+// Display green message
+function displayMessage(text) {
+  messageEl.textContent = text;
+  setTimeout(() => {
+    messageEl.textContent = "";
+  }, 3000);
+}
+
+// Generate a sword
+function generateSword() {
+  const rarity = getRandomElement(rarities);
+  const quality = getRandomElement(qualities);
+  const mold = getRandomElement(molds);
+
+  const value = Math.floor(
+    (10 + Math.random() * 90) * rarity.multiplier * quality.multiplier * mold.multiplier
+  );
+
+  currentSword = { level: 1, rarity, quality, mold, value, exp: 0, nextLevelExp: 100 };
+  displaySword();
+}
+
+// Display sword
 function displaySword() {
+  if (!currentSword) return;
+
   swordBox.style.display = "block";
   document.getElementById("sword-header").textContent = `${playerName}'s Sword`;
   document.getElementById("sword-level").textContent = `Lv ${currentSword.level}`;
   document.getElementById("sword-rarity-quality").textContent = `${currentSword.rarity.name}/${currentSword.quality.name}`;
-  document.getElementById("sword-mold").textContent = `${currentSword.mold.name}`;
+  document.getElementById("sword-mold").textContent = currentSword.mold.name;
   document.getElementById("sword-value").textContent = `$${formatNumber(currentSword.value)}`;
 }
 
-// Rest of the code remains unchanged
+// Sell the current sword
+function sellSword() {
+  if (!currentSword) {
+    displayMessage("No sword to sell!");
+    return;
+  }
+
+  cash += currentSword.value;
+  exp += Math.floor(currentSword.value / 10);
+
+  // Sword gains EXP and levels up
+  currentSword.exp += Math.floor(currentSword.value / 20);
+  while (currentSword.exp >= currentSword.nextLevelExp) {
+    currentSword.level++;
+    currentSword.exp -= currentSword.nextLevelExp;
+    currentSword.nextLevelExp = Math.floor(currentSword.nextLevelExp * 1.5);
+    currentSword.value = Math.floor(currentSword.value * 1.2); // Increase value with level
+  }
+
+  currentSword = null;
+  swordBox.style.display = "none";
+  updateExpBar();
+  displayMessage(`Sword sold! Gained EXP and $${formatNumber(cash)}.`);
+}
+
+// Upgrade quality
+function upgradeQuality() {
+  if (!currentSword) {
+    displayMessage("No sword to upgrade!");
+    return;
+  }
+  const currentIndex = qualities.findIndex(q => q.name === currentSword.quality.name);
+  if (currentIndex === -1 || currentIndex === qualities.length - 1) {
+    displayMessage("Quality is already at maximum!");
+    return;
+  }
+  currentSword.quality = qualities[currentIndex + 1];
+  displaySword();
+  displayMessage("Sword quality upgraded!");
+}
+
+// Upgrade rarity
+function upgradeRarity() {
+  if (!currentSword) {
+    displayMessage("No sword to upgrade!");
+    return;
+  }
+  const currentIndex = rarities.findIndex(r => r.name === currentSword.rarity.name);
+  if (currentIndex === -1 || currentIndex === rarities.length - 1) {
+    displayMessage("Rarity is already at maximum!");
+    return;
+  }
+  currentSword.rarity = rarities[currentIndex + 1];
+  displaySword();
+  displayMessage("Sword rarity upgraded!");
+}
+
+// Upgrade mold
+function upgradeMold() {
+  if (!currentSword) {
+    displayMessage("No sword to upgrade!");
+    return;
+  }
+  const currentIndex = molds.findIndex(m => m.name === currentSword.mold.name);
+  if (currentIndex === -1 || currentIndex === molds.length - 1) {
+    displayMessage("Mold is already at maximum!");
+    return;
+  }
+  currentSword.mold = molds[currentIndex + 1];
+  displaySword();
+  displayMessage("Sword mold upgraded!");
+}
+
+// Utility functions
+function getRandomElement(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+function formatNumber(number) {
+  if (number >= 1e12) return (number / 1e12).toFixed(2) + "T";
+  if (number >= 1e9) return (number / 1e9).toFixed(2) + "B";
+  if (number >= 1e6) return (number / 1e6).toFixed(2) + "M";
+  if (number >= 1e3) return (number / 1e3).toFixed(2) + "K";
+  return Math.floor(number);
+}
+
+// Attach Event Listeners
+document.getElementById("generate-sword").addEventListener("click", generateSword);
+document.getElementById("sell-sword").addEventListener("click", sellSword);
+document.getElementById("upgrade-quality").addEventListener("click", upgradeQuality);
+document.getElementById("upgrade-rarity").addEventListener("click", upgradeRarity);
+document.getElementById("upgrade-mold").addEventListener("click", upgradeMold);
+document.getElementById("save-game").addEventListener("click", saveGame);
+document.getElementById("load-game").addEventListener("click", loadGame);
+document.getElementById("toggle-leaderboard").addEventListener("click", displayLeaderboard);
