@@ -29,30 +29,6 @@ playerNameEl.textContent = playerName || "Player";
 // Auto-save every 30 seconds
 setInterval(autoSaveGame, 30000);
 
-// Sword attributes
-const rarities = [
-  { name: "Common", multiplier: 1, baseChance: 1, color: "#cccccc" },
-  { name: "Uncommon", multiplier: 2, baseChance: 0.5, color: "#00ff00" },
-  { name: "Rare", multiplier: 5, baseChance: 0.25, color: "#0000ff" },
-  { name: "Epic", multiplier: 20, baseChance: 0.125, color: "#800080" },
-  { name: "Legendary", multiplier: 100, baseChance: 0.0625, color: "#ffa500" }
-];
-
-const molds = [
-  { name: "Normal", multiplier: 1, baseChance: 1, color: "#cccccc" },
-  { name: "Bronze", multiplier: 2, baseChance: 0.5, color: "#cd7f32" },
-  { name: "Silver", multiplier: 4, baseChance: 0.25, color: "#c0c0c0" },
-  { name: "Gold", multiplier: 10, baseChance: 0.125, color: "#ffd700" },
-  { name: "Diamond", multiplier: 50, baseChance: 0.0625, color: "#b9f2ff" }
-];
-
-const qualities = [
-  { name: "Poor", multiplier: 0.5, baseChance: 1, color: "#cccccc" },
-  { name: "Fine", multiplier: 1, baseChance: 0.5, color: "#00ff00" },
-  { name: "Pristine", multiplier: 2, baseChance: 0.25, color: "#0000ff" },
-  { name: "Masterwork", multiplier: 5, baseChance: 0.125, color: "#800080" }
-];
-
 // Update EXP bar
 function updateExpBar() {
   const percentage = (exp / nextLevelExp) * 100;
@@ -103,13 +79,12 @@ function updateLeaderboard() {
   leaderboard.sort((a, b) => b.cash - a.cash);
   leaderboard = leaderboard.slice(0, 10); // Keep top 10
   localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
-
   displayLeaderboard();
 }
 
 // Display leaderboard
 function displayLeaderboard() {
-  leaderboardEl.style.display = "block";
+  leaderboardEl.style.display = leaderboardEl.style.display === "block" ? "none" : "block";
   leaderboardListEl.innerHTML = leaderboard
     .map((entry, index) => `<li>${index + 1}. ${entry.name} - $${entry.cash}</li>`)
     .join("");
@@ -123,7 +98,27 @@ function displayMessage(text) {
   }, 3000);
 }
 
-// Add event listeners
-document.getElementById("show-leaderboard").addEventListener("click", displayLeaderboard);
+// Event listeners
+document.getElementById("generate-sword").addEventListener("click", generateSword);
+document.getElementById("sell-sword").addEventListener("click", () => {
+  if (!currentSword) {
+    displayMessage("No sword to sell!");
+    return;
+  }
+  cash += currentSword.value;
+  exp += Math.floor(currentSword.value / 10);
+  currentSword = null;
+  swordBox.style.display = "none";
+  updateExpBar();
+  displayMessage(`Sword sold! Gained EXP and $${cash}`);
+});
+document.getElementById("upgrade-quality").addEventListener("click", () => {
+  if (!currentSword) {
+    displayMessage("No sword to upgrade!");
+    return;
+  }
+  displayMessage("Sword quality upgraded!");
+});
 document.getElementById("save-game").addEventListener("click", saveGame);
 document.getElementById("load-game").addEventListener("click", loadGame);
+document.getElementById("toggle-leaderboard").addEventListener("click", displayLeaderboard);
