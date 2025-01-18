@@ -165,12 +165,37 @@ function displayMessage(message) {
   document.getElementById("message").textContent = message;
 }
 
-// Add event listeners to buttons
+// Save game state
+function saveGame() {
+  const gameState = { cash, exp, level, currentSword };
+  localStorage.setItem("swordFactoryGame", JSON.stringify(gameState));
+  displayMessage("Game saved successfully!");
+}
+
+// Load game state
+function loadGame() {
+  const savedState = localStorage.getItem("swordFactoryGame");
+  if (savedState) {
+    const { cash: savedCash, exp: savedExp, level: savedLevel, currentSword: savedSword } = JSON.parse(savedState);
+    cash = savedCash || 0;
+    exp = savedExp || 0;
+    level = savedLevel || 1;
+    currentSword = savedSword || null;
+    updateCash();
+    updateExpBar();
+    displaySword();
+    displayMessage("Game loaded successfully!");
+  } else {
+    displayMessage("No saved game found.");
+  }
+}
+
+// Attach event listeners to buttons
 function setupEventListeners() {
-  document.querySelector("button[onclick='generateSword()']").addEventListener("click", generateSword);
-  document.querySelector("button[onclick='sellSword()']").addEventListener("click", sellSword);
-  document.querySelector("button[onclick='saveGame()']").addEventListener("click", saveGame);
-  document.querySelector("button[onclick='loadGame()']").addEventListener("click", loadGame);
+  document.getElementById("generate-sword").addEventListener("click", generateSword);
+  document.getElementById("sell-sword").addEventListener("click", sellSword);
+  document.getElementById("save-game").addEventListener("click", saveGame);
+  document.getElementById("load-game").addEventListener("click", loadGame);
 }
 
 // Initialize the game
@@ -181,4 +206,5 @@ function initializeGame() {
   displayMessage("Welcome to Sword Factory Revamp!");
 }
 
+// Initialize on load
 initializeGame();
