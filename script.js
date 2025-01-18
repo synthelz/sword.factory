@@ -41,6 +41,19 @@ const rarityClasses = {
   Legendary: "legendary",
 };
 
+// Utility: Display a Message
+function displayMessage(message, isSuccess = true) {
+  const messageBox = document.getElementById("message-box");
+  messageBox.textContent = message;
+  messageBox.style.color = isSuccess ? "green" : "red";
+}
+
+// Utility: Clear Message
+function clearMessage() {
+  const messageBox = document.getElementById("message-box");
+  messageBox.textContent = "";
+}
+
 // Weighted Random Function
 function weightedRandom(attributes) {
   const totalWeight = attributes.reduce((sum, attr) => sum + 1 / attr.weight, 0);
@@ -64,8 +77,12 @@ function updateGUI() {
   document.getElementById("rarity").textContent = rarity;
   document.getElementById("quality").className = rarityClasses[rarity];
   document.getElementById("quality").textContent = quality;
-  document.getElementById("mold").className = rarityClasses[rarity];
+
+  // Update Mold Color
+  document.getElementById("mold").className = mold.toLowerCase();
   document.getElementById("mold").textContent = mold;
+
+  // Update Sword Value
   document.getElementById("value").textContent = `$${swordValue.toLocaleString()}`;
   document.getElementById("exp-display").textContent = `EXP: ${exp} / ${expToLevelUp}`;
   document.getElementById("exp-bar-fill").style.width = `${(exp / expToLevelUp) * 100}%`;
@@ -78,13 +95,14 @@ function generateSword() {
   mold = weightedRandom(molds).name;
   swordValue = Math.floor(Math.random() * 1000 + 1000);
 
+  clearMessage();
   updateGUI();
 }
 
 // Sell the Current Sword
 function sellSword() {
   if (swordValue === 0) {
-    alert("No sword to sell!");
+    displayMessage("No sword to sell!", false);
     return;
   }
 
@@ -96,10 +114,10 @@ function sellSword() {
     exp -= expToLevelUp;
     expToLevelUp = Math.floor(expToLevelUp * 1.5);
     level++;
-    alert(`Congratulations! You've leveled up to Level ${level}!`);
+    displayMessage(`Level up! New level: ${level}`, true);
   }
 
-  alert(`Sword sold for $${swordValue}! Gained ${expGain} EXP.`);
+  displayMessage(`Sword sold for $${swordValue}! Gained ${expGain} EXP.`, true);
   swordValue = 0; // Reset sword value after selling
   updateGUI();
 }
@@ -108,16 +126,16 @@ function sellSword() {
 function upgradeAttribute(attributeList, currentAttribute, attributeName) {
   const currentIndex = attributeList.findIndex(attr => attr.name === currentAttribute);
   if (currentIndex === attributeList.length - 1) {
-    alert(`${attributeName} is already at maximum!`);
+    displayMessage(`${attributeName} is already at maximum!`, false);
     return currentAttribute;
   }
 
   const chance = 1 / attributeList[currentIndex + 1].weight;
   if (Math.random() <= chance) {
-    alert(`${attributeName} upgraded successfully!`);
+    displayMessage(`${attributeName} upgraded successfully!`, true);
     return attributeList[currentIndex + 1].name;
   } else {
-    alert(`${attributeName} upgrade failed!`);
+    displayMessage(`${attributeName} upgrade failed!`, false);
     return currentAttribute;
   }
 }
@@ -152,7 +170,7 @@ function saveGame() {
   };
 
   localStorage.setItem("swordGameSave", JSON.stringify(saveData));
-  alert("Game saved successfully!");
+  displayMessage("Game saved successfully!", true);
 }
 
 // Load Game
@@ -160,7 +178,7 @@ function loadGame() {
   const saveData = JSON.parse(localStorage.getItem("swordGameSave"));
 
   if (!saveData) {
-    alert("No saved game found!");
+    displayMessage("No saved game found!", false);
     return;
   }
 
@@ -174,7 +192,7 @@ function loadGame() {
   expToLevelUp = saveData.expToLevelUp;
   leaderboard = saveData.leaderboard;
 
-  alert("Game loaded successfully!");
+  displayMessage("Game loaded successfully!", true);
   updateGUI();
 }
 
