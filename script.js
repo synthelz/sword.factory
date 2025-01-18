@@ -49,7 +49,6 @@ const qualities = [
 ];
 
 let cash = 0;
-let inventory = [];
 let currentSword = null;
 let luckLevel = 0;
 const defaultLuckValue = 1;
@@ -72,6 +71,7 @@ function generateSword() {
     mold: mold.name,
     value: value,
   };
+  console.log(currentSword); // Debugging log
   displaySword();
 }
 
@@ -79,9 +79,9 @@ function sellSword() {
   if (!currentSword) return alert("Produce a sword first!");
 
   cash += currentSword.value;
+  alert(`Sword sold for $${currentSword.value}!`);
   currentSword = null;
   updateCash();
-  alert(`Sword sold for $${currentSword.value}!`);
   displaySword();
 }
 
@@ -110,12 +110,14 @@ function weightedRandom(list) {
 }
 
 function displaySword() {
+  const swordBox = document.querySelector(".sword-box");
+
   if (!currentSword) {
-    document.querySelector(".sword-box").style.display = "none";
+    swordBox.style.display = "none";
     return;
   }
 
-  document.querySelector(".sword-box").style.display = "block";
+  swordBox.style.display = "block";
   document.getElementById("sword-level").textContent = currentSword.value;
   document.getElementById("sword-rarity").textContent = currentSword.rarity.name;
   document.getElementById("sword-quality").textContent = currentSword.quality.name;
