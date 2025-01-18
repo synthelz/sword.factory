@@ -82,18 +82,18 @@
   <div class="container">
     <h1>Sword Factory Revamp</h1>
     <div class="sword-box">
-      <h2>kvibes5's Sword</h2>
+      <h2><span id="player-name">Player's</span> Sword</h2>
       <div class="level-rarity">
-        Level: <span id="sword-level">733</span> | Rarity: <span id="sword-rarity">7.1Qd</span>
+        Level: <span id="sword-level">0</span> | Rarity: <span id="sword-rarity">0</span>
       </div>
       <div class="attributes">
-        <span>Quality: <span id="sword-quality">Miraculous</span></span>
-        <span>Rarity: <span id="sword-rarity-text">Catastrophic</span></span>
-        <span class="enchant">Resistance: <span id="enchant1">81</span></span>
-        <span class="enchant">Greed++: <span id="enchant2">74</span></span>
-        <span class="enchant">Sharpness: <span id="enchant3">70</span></span>
+        <span>Quality: <span id="sword-quality">Normal</span></span>
+        <span>Rarity: <span id="sword-rarity-text">Normal</span></span>
+        <span class="enchant">Resistance: <span id="enchant1">0</span></span>
+        <span class="enchant">Greed++: <span id="enchant2">0</span></span>
+        <span class="enchant">Sharpness: <span id="enchant3">0</span></span>
       </div>
-      <div class="mold">Mold: <span id="sword-mold">Topaz</span></div>
+      <div class="mold">Mold: <span id="sword-mold">Normal</span></div>
     </div>
 
     <div class="buttons">
@@ -108,5 +108,76 @@
 
     <div class="cash">Cash: $<span id="cash">0</span></div>
   </div>
+
+  <script>
+    // Molds and their multipliers
+    const molds = {
+      Normal: 1,
+      Bronze: 2.5,
+      Silver: 6,
+      Gold: 15,
+      Sapphire: 35,
+      Emerald: 60,
+      Ruby: 100,
+      Amethyst: 145,
+      Diamond: 190,
+      Opal: 250,
+      Uranium: 300,
+      Crystal: 350,
+      Moonstone: 420,
+      Topaz: 490,
+      Painite: 700,
+      Anhydrite: 850,
+      Azure: 950,
+      Volcanic: 1175,
+      Jade: 1200,
+      Shale: 1250,
+      Platinum: 1300,
+      Quartz: 1400,
+      Asgarite: 1500,
+      Stardust: 1750,
+      Zeolite: 1900,
+      Ammolite: 2100
+    };
+
+    let cash = 0;
+
+    function generateSword() {
+      // Randomly generate sword attributes
+      const moldKeys = Object.keys(molds);
+      const randomMold = moldKeys[Math.floor(Math.random() * moldKeys.length)];
+      const randomLevel = Math.floor(Math.random() * 1000) + 1;
+      const randomRarity = (Math.random() * 10).toFixed(2);
+
+      // Update sword attributes in the UI
+      document.getElementById("sword-level").textContent = randomLevel;
+      document.getElementById("sword-rarity").textContent = randomRarity;
+      document.getElementById("sword-mold").textContent = randomMold;
+      document.getElementById("sword-quality").textContent = "Miraculous";
+      document.getElementById("sword-rarity-text").textContent = "Catastrophic";
+      document.getElementById("enchant1").textContent = Math.floor(Math.random() * 100) + 1;
+      document.getElementById("enchant2").textContent = Math.floor(Math.random() * 100) + 1;
+      document.getElementById("enchant3").textContent = Math.floor(Math.random() * 100) + 1;
+    }
+
+    function sellSword() {
+      const mold = document.getElementById("sword-mold").textContent;
+      const level = parseInt(document.getElementById("sword-level").textContent);
+      const multiplier = molds[mold] || 1;
+      const swordValue = level * multiplier;
+
+      cash += swordValue;
+      document.getElementById("cash").textContent = cash;
+      alert(`Sword sold for $${swordValue}!`);
+    }
+
+    function saveSword() {
+      alert("Sword saved!");
+    }
+
+    function upgradeSword(type) {
+      alert(`Upgraded ${type}!`);
+    }
+  </script>
 </body>
 </html>
