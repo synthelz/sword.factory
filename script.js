@@ -118,8 +118,34 @@ function sellSword() {
   }
 
   displayMessage(`Sword sold for $${swordValue}! Gained ${expGain} EXP.`, true);
+
+  // Add to leaderboard
+  addToLeaderboard(playerName, swordValue);
+
   swordValue = 0; // Reset sword value after selling
   updateGUI();
+}
+
+// Add to Leaderboard
+function addToLeaderboard(playerName, score) {
+  leaderboard.push({ name: playerName, score });
+
+  // Keep only the top 10 scores
+  leaderboard = leaderboard.sort((a, b) => b.score - a.score).slice(0, 10);
+
+  updateLeaderboard();
+}
+
+// Update Leaderboard HTML
+function updateLeaderboard() {
+  const leaderboardElement = document.getElementById("leaderboard-list");
+  leaderboardElement.innerHTML = "";
+
+  leaderboard.forEach((entry, index) => {
+    const listItem = document.createElement("li");
+    listItem.textContent = `${index + 1}. ${entry.name} - $${entry.score.toLocaleString()}`;
+    leaderboardElement.appendChild(listItem);
+  });
 }
 
 // Upgrade Logic
@@ -194,6 +220,7 @@ function loadGame() {
 
   displayMessage("Game loaded successfully!", true);
   updateGUI();
+  updateLeaderboard();
 }
 
 // Toggle Leaderboard
@@ -214,3 +241,5 @@ document.getElementById("toggle-leaderboard").addEventListener("click", toggleLe
 
 // Initialize the Game
 updateGUI();
+updateLeaderboard();
+
