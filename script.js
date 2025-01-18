@@ -32,6 +32,15 @@ const molds = [
   { name: "Diamond", weight: 91835 },
 ];
 
+// Color Classes for Attributes
+const rarityClasses = {
+  Common: "common",
+  Uncommon: "uncommon",
+  Rare: "rare",
+  Epic: "epic",
+  Legendary: "legendary",
+};
+
 // Weighted Random Function
 function weightedRandom(attributes) {
   const totalWeight = attributes.reduce((sum, attr) => sum + 1 / attr.weight, 0);
@@ -49,7 +58,13 @@ function weightedRandom(attributes) {
 // Update the Sword GUI
 function updateGUI() {
   document.getElementById("player-name").textContent = `${playerName}'s Sword`;
-  document.getElementById("level-rarity-quality").innerHTML = `Level ${level} | <span id="rarity">${rarity}</span> / <span id="quality">${quality}</span>`;
+  document.getElementById("level").className = rarityClasses[rarity];
+  document.getElementById("level").textContent = level;
+  document.getElementById("rarity").className = rarityClasses[rarity];
+  document.getElementById("rarity").textContent = rarity;
+  document.getElementById("quality").className = rarityClasses[rarity];
+  document.getElementById("quality").textContent = quality;
+  document.getElementById("mold").className = rarityClasses[rarity];
   document.getElementById("mold").textContent = mold;
   document.getElementById("value").textContent = `$${swordValue.toLocaleString()}`;
   document.getElementById("exp-display").textContent = `EXP: ${exp} / ${expToLevelUp}`;
@@ -163,7 +178,13 @@ function loadGame() {
   updateGUI();
 }
 
-// Event Listeners
+// Toggle Leaderboard
+function toggleLeaderboard() {
+  const leaderboardElement = document.getElementById("leaderboard");
+  leaderboardElement.style.display = leaderboardElement.style.display === "none" ? "block" : "none";
+}
+
+// Add Button Event Listeners
 document.getElementById("generate-sword").addEventListener("click", generateSword);
 document.getElementById("sell-sword").addEventListener("click", sellSword);
 document.getElementById("upgrade-quality").addEventListener("click", upgradeQuality);
@@ -171,6 +192,7 @@ document.getElementById("upgrade-rarity").addEventListener("click", upgradeRarit
 document.getElementById("upgrade-mold").addEventListener("click", upgradeMold);
 document.getElementById("save-game").addEventListener("click", saveGame);
 document.getElementById("load-game").addEventListener("click", loadGame);
+document.getElementById("toggle-leaderboard").addEventListener("click", toggleLeaderboard);
 
-// Initialize
+// Initialize the Game
 updateGUI();
