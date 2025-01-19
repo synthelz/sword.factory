@@ -5,9 +5,33 @@ let rarity = "Common";
 let quality = "Fine";
 let mold = "Bronze";
 let swordValue = 1234;
+let baseValue = 500; // Base sword value
 let exp = 0;
 let expToLevelUp = 100;
 let leaderboard = [];
+
+// Multipliers for Rarity, Quality, and Mold
+const rarityMultipliers = {
+  Common: 1,
+  Uncommon: 2,
+  Rare: 3.5,
+  Epic: 6,
+  Legendary: 10,
+};
+
+const qualityMultipliers = {
+  Poor: 1,
+  Fine: 1.5,
+  Pristine: 2.5,
+  Masterwork: 4,
+};
+
+const moldMultipliers = {
+  Bronze: 2,
+  Silver: 3.5,
+  Gold: 5,
+  Diamond: 10,
+};
 
 // Weighted Rarity Data
 const rarities = [
@@ -32,70 +56,53 @@ const molds = [
   { name: "Diamond", weight: 91835 },
 ];
 
-// Color Classes for Attributes
-const rarityClasses = {
-  Common: "common",
-  Uncommon: "uncommon",
-  Rare: "rare",
-  Epic: "epic",
-  Legendary: "legendary",
-};
-
-// Utility: Display a Message
+// Utility: Display Messages
 function displayMessage(message, isSuccess = true) {
   const messageBox = document.getElementById("message-box");
   messageBox.textContent = message;
   messageBox.style.color = isSuccess ? "green" : "red";
 }
 
-// Utility: Clear Message
-function clearMessage() {
-  const messageBox = document.getElementById("message-box");
-  messageBox.textContent = "";
-}
-
-// Weighted Random Function
+// Weighted Random Selection
 function weightedRandom(attributes) {
   const totalWeight = attributes.reduce((sum, attr) => sum + 1 / attr.weight, 0);
   const random = Math.random() * totalWeight;
   let weightSum = 0;
-
   for (const attr of attributes) {
     weightSum += 1 / attr.weight;
     if (random <= weightSum) {
-      return attr;
+      return attr.name;
     }
   }
 }
 
-// Update the Sword GUI
+// Calculate Sword Value
+function calculateSwordValue() {
+  const moldMultiplier = moldMultipliers[mold];
+  const qualityMultiplier = qualityMultipliers[quality];
+  const rarityMultiplier = rarityMultipliers[rarity];
+  return Math.floor(baseValue * moldMultiplier * qualityMultiplier * rarityMultiplier);
+}
+
+// Update Sword Display
 function updateGUI() {
   document.getElementById("player-name").textContent = `${playerName}'s Sword`;
-  document.getElementById("level").className = rarityClasses[rarity];
   document.getElementById("level").textContent = level;
-  document.getElementById("rarity").className = rarityClasses[rarity];
   document.getElementById("rarity").textContent = rarity;
-  document.getElementById("quality").className = rarityClasses[rarity];
   document.getElementById("quality").textContent = quality;
-
-  // Update Mold Color
-  document.getElementById("mold").className = mold.toLowerCase();
   document.getElementById("mold").textContent = mold;
-
-  // Update Sword Value
-  document.getElementById("value").textContent = `$${swordValue.toLocaleString()}`;
+  document.getElementById("value").textContent = `$${swordValue}`;
   document.getElementById("exp-display").textContent = `EXP: ${exp} / ${expToLevelUp}`;
   document.getElementById("exp-bar-fill").style.width = `${(exp / expToLevelUp) * 100}%`;
 }
 
 // Generate a New Sword
 function generateSword() {
-  rarity = weightedRandom(rarities).name;
-  quality = weightedRandom(qualities).name;
-  mold = weightedRandom(molds).name;
-  swordValue = Math.floor(Math.random() * 1000 + 1000);
-
-  clearMessage();
+  rarity = weightedRandom(rarities);
+  quality = weightedRandom(qualities);
+  mold = weightedRandom(molds);
+  baseValue = Math.floor(Math.random() * 500 + 500); // Random base value between 500 and 1000
+  swordValue = calculateSwordValue();
   updateGUI();
 }
 
@@ -168,16 +175,19 @@ function upgradeAttribute(attributeList, currentAttribute, attributeName) {
 
 function upgradeQuality() {
   quality = upgradeAttribute(qualities, quality, "Quality");
+  swordValue = calculateSwordValue();
   updateGUI();
 }
 
 function upgradeRarity() {
   rarity = upgradeAttribute(rarities, rarity, "Rarity");
+  swordValue = calculateSwordValue();
   updateGUI();
 }
 
 function upgradeMold() {
   mold = upgradeAttribute(molds, mold, "Mold");
+  swordValue = calculateSwordValue();
   updateGUI();
 }
 
@@ -199,7 +209,6 @@ function saveGame() {
   displayMessage("Game saved successfully!", true);
 }
 
-// Load Game
 function loadGame() {
   const saveData = JSON.parse(localStorage.getItem("swordGameSave"));
 
@@ -218,9 +227,9 @@ function loadGame() {
   expToLevelUp = saveData.expToLevelUp;
   leaderboard = saveData.leaderboard;
 
-  displayMessage("Game loaded successfully!", true);
   updateGUI();
   updateLeaderboard();
+  displayMessage("Game loaded successfully!", true);
 }
 
 // Toggle Leaderboard
@@ -239,7 +248,6 @@ document.getElementById("save-game").addEventListener("click", saveGame);
 document.getElementById("load-game").addEventListener("click", loadGame);
 document.getElementById("toggle-leaderboard").addEventListener("click", toggleLeaderboard);
 
-// Initialize the Game
+// Initialize Game
 updateGUI();
 updateLeaderboard();
-
