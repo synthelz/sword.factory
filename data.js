@@ -1,89 +1,6 @@
 // data.js
 
-// Multipliers for Rarity, Quality, and Mold
-export const rarityMultipliers = {
-  Common: 1,
-  Uncommon: 2,
-  Rare: 3.5,
-  Epic: 6,
-  Legendary: 10,
-};
-
-export const qualityMultipliers = {
-  Poor: 1,
-  Fine: 1.5,
-  Pristine: 2.5,
-  Masterwork: 4,
-};
-
-export const moldMultipliers = {
-  Bronze: 2,
-  Silver: 3.5,
-  Gold: 5,
-  Diamond: 10,
-};
-
-// Classes for Color Coding
-export const rarityClasses = {
-  Common: "common",
-  Uncommon: "uncommon",
-  Rare: "rare",
-  Epic: "epic",
-  Legendary: "legendary",
-};
-
-export const moldClasses = {
-  Bronze: "bronze",
-  Silver: "silver",
-  Gold: "gold",
-  Diamond: "diamond",
-};
-
-// Molds with Weights and Multipliers
-export const molds = [
-  { name: "Normal", weight: 1, multiplier: 1 },
-  { name: "Bronze", weight: 10, multiplier: 2.5 },
-  { name: "Silver", weight: 100, multiplier: 6 },
-  { name: "Gold", weight: 1000, multiplier: 15 },
-  { name: "Sapphire", weight: 10000, multiplier: 35 },
-  { name: "Emerald", weight: 100000, multiplier: 60 },
-  { name: "Ruby", weight: 1000000, multiplier: 100 },
-  { name: "Amethyst", weight: 10000000, multiplier: 145 },
-  { name: "Diamond", weight: 100000000, multiplier: 190 },
-  { name: "Opal", weight: 1000000000, multiplier: 250 },
-  { name: "Uranium", weight: 5000000000, multiplier: 300 },
-  { name: "Crystal", weight: 10000000000, multiplier: 350 },
-  { name: "Moonstone", weight: 50000000000, multiplier: 420 },
-  { name: "Topaz", weight: 100000000000, multiplier: 490 },
-  { name: "Painite", weight: 1000000000000, multiplier: 700 },
-  { name: "Anhydrite", weight: 1500000000000, multiplier: 850 },
-  { name: "Azure", weight: 10000000000000, multiplier: 950 },
-  { name: "Volcanic", weight: 10000000000000, multiplier: 1175 },
-  { name: "Jade", weight: 10500000000000, multiplier: 1200 },
-  { name: "Shale", weight: 30000000000000, multiplier: 1250 },
-  { name: "Platinum", weight: 60000000000000, multiplier: 1300 },
-  { name: "Quartz", weight: 100000000000000, multiplier: 1400 },
-  { name: "Asgarite", weight: 250000000000000, multiplier: 1500 },
-  { name: "Stardust", weight: 400000000000000, multiplier: 1750 },
-  { name: "Zeolite", weight: 500000000000000, multiplier: 1900 },
-  { name: "Ammolite", weight: 1000000000000000, multiplier: 2000 },
-];
-
-// Qualities with Weights and Multipliers
-export const qualities = [
-  { name: "Broken", weight: 1, multiplier: 1 },
-  { name: "Rough", weight: 3, multiplier: 1.25 },
-  { name: "Bad", weight: 9, multiplier: 1.5 },
-  { name: "Okay", weight: 27, multiplier: 2 },
-  { name: "Fine", weight: 81, multiplier: 3 },
-  { name: "Good", weight: 243, multiplier: 4.5 },
-  { name: "Great", weight: 729, multiplier: 6 },
-  { name: "Awesome", weight: 2187, multiplier: 9 },
-  { name: "Excellent", weight: 6561, multiplier: 12.5 },
-  { name: "Perfect", weight: 19683, multiplier: 18 },
-];
-
-// Rarities
+// Rarities with Weights and Multipliers
 export const rarities = [
   { name: "Basic-", weight: 1, multiplier: 1 },
   { name: "Basic", weight: 1 / 1.33, multiplier: 1.2 },
@@ -194,3 +111,76 @@ export const rarities = [
   { name: "Infinity++", weight: 1 / 879600000000000000000, multiplier: 5182602 },
   { name: "Infinity+3", weight: 1 / 759000000000000000000000, multiplier: 5959992 },
 ];
+
+// Qualities with Weights and Multipliers
+export const qualities = [
+  { name: "Broken", weight: 1, multiplier: 1 },
+  { name: "Rough", weight: 3, multiplier: 1.25 },
+  { name: "Bad", weight: 9, multiplier: 1.5 },
+  { name: "Okay", weight: 27, multiplier: 2 },
+  { name: "Fine", weight: 81, multiplier: 3 },
+  { name: "Good", weight: 243, multiplier: 4.5 },
+  { name: "Great", weight: 729, multiplier: 6 },
+  { name: "Awesome", weight: 2187, multiplier: 9 },
+  { name: "Excellent", weight: 6561, multiplier: 12.5 },
+  { name: "Perfect", weight: 19683, multiplier: 18 },
+];
+
+// Molds with Weights and Multipliers
+export const molds = [
+  { name: "Normal", weight: 1, multiplier: 1 },
+  { name: "Bronze", weight: 10, multiplier: 2 },
+  { name: "Silver", weight: 100, multiplier: 3.5 },
+  { name: "Gold", weight: 1000, multiplier: 5 },
+  { name: "Diamond", weight: 100000, multiplier: 10 },
+];
+
+// Classes for Rarity Color Coding
+export const rarityClasses = {
+  "Basic-": "basic-minus",
+  "Basic": "basic",
+  "Basic++": "basic-plus-plus",
+  "Common-": "common-minus",
+  "Common": "common",
+  "Common++": "common-plus-plus",
+  "Uncommon-": "uncommon-minus",
+  "Uncommon": "uncommon",
+  "Uncommon++": "uncommon-plus-plus",
+  "Rare-": "rare-minus",
+  "Rare": "rare",
+  "Rare++": "rare-plus-plus",
+  "Epic": "epic",
+  "Legendary": "legendary",
+  "Mythical": "mythical",
+  "Divine": "divine",
+  "Super": "super",
+  "Mega": "mega",
+  "Ultra": "ultra",
+  "Omega": "omega",
+  "Extreme": "extreme",
+  "Ultimate": "ultimate",
+  "Insane": "insane",
+  "Hyper": "hyper",
+  "Godly": "godly",
+  "Unique": "unique",
+  "Exotic": "exotic",
+  "Supreme": "supreme",
+  "Celestial": "celestial",
+  "Eternal": "eternal",
+  "Cosmic": "cosmic",
+  "Heavenly": "heavenly",
+  "Stellar": "stellar",
+  "Galactic": "galactic",
+  "Infinity": "infinity",
+  "Infinity+3": "infinity-plus",
+};
+
+// Classes for Mold Color Coding
+export const moldClasses = {
+  Normal: "mold-normal",
+  Bronze: "mold-bronze",
+  Silver: "mold-silver",
+  Gold: "mold-gold",
+  Diamond: "mold-diamond",
+};
+
