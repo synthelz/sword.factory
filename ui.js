@@ -64,8 +64,8 @@ export function updateLeaderboard(leaderboard) {
 }
 
 /**
- * Adds event listeners to buttons and other interactive elements.
- * @param {Object} actions - Functions to trigger on button events.
+ * Initializes UI event listeners for the game buttons.
+ * @param {Object} actions - An object containing game logic functions to bind to buttons.
  */
 export function initializeUI(actions) {
   document.getElementById("generate-sword").addEventListener("click", actions.generateSword);
@@ -79,7 +79,7 @@ export function initializeUI(actions) {
 }
 
 /**
- * Toggles the visibility of the leaderboard.
+ * Toggles the visibility of the leaderboard UI.
  */
 export function toggleLeaderboard() {
   const leaderboardElement = document.getElementById("leaderboard");
