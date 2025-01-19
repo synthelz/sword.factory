@@ -87,7 +87,6 @@
 </head>
 <body>
   <div class="game-container">
-    <!-- Sword Display -->
     <div class="sword-container">
       <div id="sword-gui" class="sword-gui">
         <h2 id="player-name">Player's Sword</h2>
@@ -99,34 +98,27 @@
         <p>Mold: <span id="mold">Normal</span></p>
         <p>Value: <span id="value">$0</span></p>
       </div>
-
-      <!-- EXP Bar -->
       <div class="exp-bar">
         <div class="exp-bar-fill" id="exp-bar-fill"></div>
       </div>
       <p id="exp-display">EXP: 0 / 100</p>
     </div>
-
-    <!-- Action Buttons -->
     <div class="other-buttons">
       <button id="generate-sword">Generate Sword</button>
       <button id="sell-sword">Sell Sword</button>
       <button id="upgrade-quality">Upgrade Quality</button>
       <button id="upgrade-rarity">Upgrade Rarity</button>
       <button id="upgrade-mold">Upgrade Mold</button>
+      <button id="save-game">Save Game</button>
+      <button id="load-game">Load Game</button>
+      <button id="toggle-leaderboard">Toggle Leaderboard</button>
     </div>
   </div>
-
-  <!-- Leaderboard -->
   <div id="leaderboard" style="display: none;">
     <h3>Leaderboard</h3>
     <ul id="leaderboard-list"></ul>
   </div>
-
-  <!-- Message Box -->
   <p id="message-box" style="text-align: center; height: 20px;"></p>
-
-  <!-- Modular Scripts -->
   <script type="module" src="./js/game.js"></script>
 </body>
 </html>
