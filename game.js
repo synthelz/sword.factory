@@ -1,233 +1,175 @@
 // game.js
 
-import { 
-  rarityMultipliers, 
-  qualityMultipliers, 
-  moldMultipliers, 
-  molds, 
-  qualities, 
-  rarities 
-} from './data.js';
+import { rarities, qualities, molds } from './data.js';
+import { calculateSwordValue, weightedRandom, displayMessage, upgradeAttribute } from './utils.js';
+import { updateGUI, updateLeaderboard, initializeUI } from './ui.js';
 
-import { 
-  displayMessage, 
-  weightedRandom, 
-  calculateSwordValue, 
-  upgradeAttribute 
-} from './utils.js';
-
-// Game State Variables
-let playerName = "Player";
-let level = 1;
-let rarity = "Common";
-let quality = "Fine";
-let mold = "Bronze";
-let swordValue = 0;
-let baseValue = 500; // Base sword value
-let exp = 0;
-let expToLevelUp = 100;
-let leaderboard = [];
+// Initial State
+const state = {
+  playerName: "Player",
+  level: 1,
+  rarity: "Basic-",
+  quality: "Broken",
+  mold: "Normal",
+  swordValue: 0,
+  baseValue: 1500,
+  exp: 0,
+  expToLevelUp: 100,
+  leaderboard: [],
+};
 
 /**
- * Updates the UI elements to reflect the current game state.
+ * Generates a new sword with the lowest attributes and a randomized base value.
  */
-function updateGUI() {
-  document.getElementById("player-name").textContent = `${playerName}'s Sword`;
-  document.getElementById("level").textContent = level;
+export function generateSword(state) {
+  // Set the lowest rarity, quality, and mold as defaults
+  state.rarity = rarities[0].name; // Lowest rarity
+  state.quality = qualities[0].name; // Lowest quality
+  state.mold = molds[0].name; // Lowest mold
 
-  const rarityElement = document.getElementById("rarity");
-  rarityElement.textContent = rarity;
-  rarityElement.className = rarity;
+  // Randomize base value between 1500 and 2000
+  state.baseValue = Math.floor(Math.random() * 501) + 1500; // Random value in range 1500-2000
 
-  const qualityElement = document.getElementById("quality");
-  qualityElement.textContent = quality;
+  // Recalculate sword value
+  state.swordValue = calculateSwordValue(state);
 
-  const moldElement = document.getElementById("mold");
-  moldElement.textContent = mold;
-
-  document.getElementById("value").textContent = `$${swordValue}`;
-  document.getElementById("exp-display").textContent = `EXP: ${exp} / ${expToLevelUp}`;
-  document.getElementById("exp-bar-fill").style.width = `${(exp / expToLevelUp) * 100}%`;
+  // Update the UI with the new sword details
+  updateGUI(state);
 }
 
 /**
- * Generates a new sword with random attributes and calculates its value.
+ * Sells the current sword and adds EXP based on its value.
  */
-function generateSword() {
-  rarity = weightedRandom(rarities);
-  quality = weightedRandom(qualities);
-  mold = weightedRandom(molds);
-  baseValue = Math.floor(Math.random() * 500 + 500); // Random base value between 500 and 1000
-  swordValue = calculateSwordValue(
-    baseValue,
-    moldMultipliers[mold],
-    qualityMultipliers[quality],
-    rarityMultipliers[rarity]
-  );
-  updateGUI();
-}
-
-/**
- * Sells the current sword and grants experience points.
- */
-function sellSword() {
-  if (swordValue === 0) {
+export function sellSword(state) {
+  if (state.swordValue === 0) {
     displayMessage("No sword to sell!", false);
     return;
   }
 
-  const expGain = Math.floor(swordValue / 10);
-  exp += expGain;
+  const expGain = Math.floor(state.swordValue / 10);
+  state.exp += expGain;
 
-  while (exp >= expToLevelUp) {
-    exp -= expToLevelUp;
-    expToLevelUp = Math.floor(expToLevelUp * 1.5);
-    level++;
-    displayMessage(`Level up! New level: ${level}`, true);
+  // Handle leveling up
+  while (state.exp >= state.expToLevelUp) {
+    state.exp -= state.expToLevelUp;
+    state.expToLevelUp = Math.floor(state.expToLevelUp * 1.5);
+    state.level++;
+    displayMessage(`Level up! New level: ${state.level}`, true);
   }
 
-  displayMessage(`Sword sold for $${swordValue}! Gained ${expGain} EXP.`, true);
-  addToLeaderboard(playerName, swordValue);
+  displayMessage(`Sword sold for $${state.swordValue}! Gained ${expGain} EXP.`, true);
 
-  swordValue = 0; // Reset sword value after selling
-  updateGUI();
+  // Add to leaderboard
+  addToLeaderboard(state.playerName, state.swordValue);
+
+  // Reset sword value
+  state.swordValue = 0;
+  updateGUI(state);
 }
 
 /**
- * Adds the player's score to the leaderboard and updates it.
- * @param {string} playerName - Name of the player.
- * @param {number} score - The player's score.
+ * Adds a score to the leaderboard and updates the UI.
  */
-function addToLeaderboard(playerName, score) {
-  leaderboard.push({ name: playerName, score });
-  leaderboard = leaderboard.sort((a, b) => b.score - a.score).slice(0, 10);
-  updateLeaderboard();
+export function addToLeaderboard(playerName, score) {
+  state.leaderboard.push({ name: playerName, score });
+
+  // Keep only the top 10 scores
+  state.leaderboard = state.leaderboard
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 10);
+
+  updateLeaderboard(state.leaderboard);
 }
 
 /**
- * Updates the leaderboard UI.
+ * Upgrades the sword's quality.
  */
-function updateLeaderboard() {
-  const leaderboardElement = document.getElementById("leaderboard-list");
-  leaderboardElement.innerHTML = "";
-
-  leaderboard.forEach((entry, index) => {
-    const listItem = document.createElement("li");
-    listItem.textContent = `${index + 1}. ${entry.name} - $${entry.score.toLocaleString()}`;
-    leaderboardElement.appendChild(listItem);
-  });
+export function upgradeQuality(state) {
+  state.quality = upgradeAttribute(qualities, state.quality, "Quality");
+  state.swordValue = calculateSwordValue(state);
+  updateGUI(state);
 }
 
 /**
- * Attempts to upgrade the sword's quality.
+ * Upgrades the sword's rarity.
  */
-function upgradeQuality() {
-  quality = upgradeAttribute(qualities, quality, "Quality");
-  swordValue = calculateSwordValue(
-    baseValue,
-    moldMultipliers[mold],
-    qualityMultipliers[quality],
-    rarityMultipliers[rarity]
-  );
-  updateGUI();
+export function upgradeRarity(state) {
+  state.rarity = upgradeAttribute(rarities, state.rarity, "Rarity");
+  state.swordValue = calculateSwordValue(state);
+  updateGUI(state);
 }
 
 /**
- * Attempts to upgrade the sword's rarity.
+ * Upgrades the sword's mold.
  */
-function upgradeRarity() {
-  rarity = upgradeAttribute(rarities, rarity, "Rarity");
-  swordValue = calculateSwordValue(
-    baseValue,
-    moldMultipliers[mold],
-    qualityMultipliers[quality],
-    rarityMultipliers[rarity]
-  );
-  updateGUI();
+export function upgradeMold(state) {
+  state.mold = upgradeAttribute(molds, state.mold, "Mold");
+  state.swordValue = calculateSwordValue(state);
+  updateGUI(state);
 }
 
 /**
- * Attempts to upgrade the sword's mold.
+ * Saves the game state to localStorage.
  */
-function upgradeMold() {
-  mold = upgradeAttribute(molds, mold, "Mold");
-  swordValue = calculateSwordValue(
-    baseValue,
-    moldMultipliers[mold],
-    qualityMultipliers[quality],
-    rarityMultipliers[rarity]
-  );
-  updateGUI();
-}
-
-/**
- * Saves the game state to local storage.
- */
-function saveGame() {
+export function saveGame(state) {
   const saveData = {
-    playerName,
-    level,
-    rarity,
-    quality,
-    mold,
-    swordValue,
-    exp,
-    expToLevelUp,
-    leaderboard,
+    playerName: state.playerName,
+    level: state.level,
+    rarity: state.rarity,
+    quality: state.quality,
+    mold: state.mold,
+    swordValue: state.swordValue,
+    exp: state.exp,
+    expToLevelUp: state.expToLevelUp,
+    leaderboard: state.leaderboard,
   };
+
   localStorage.setItem("swordGameSave", JSON.stringify(saveData));
   displayMessage("Game saved successfully!", true);
 }
 
 /**
- * Loads the game state from local storage.
+ * Loads the game state from localStorage.
  */
-function loadGame() {
+export function loadGame(state) {
   const saveData = JSON.parse(localStorage.getItem("swordGameSave"));
+
   if (!saveData) {
     displayMessage("No saved game found!", false);
     return;
   }
 
-  ({
-    playerName,
-    level,
-    rarity,
-    quality,
-    mold,
-    swordValue,
-    exp,
-    expToLevelUp,
-    leaderboard
-  } = saveData);
+  state.playerName = saveData.playerName;
+  state.level = saveData.level;
+  state.rarity = saveData.rarity;
+  state.quality = saveData.quality;
+  state.mold = saveData.mold;
+  state.swordValue = saveData.swordValue;
+  state.exp = saveData.exp;
+  state.expToLevelUp = saveData.expToLevelUp;
+  state.leaderboard = saveData.leaderboard;
 
-  updateGUI();
-  updateLeaderboard();
+  updateGUI(state);
+  updateLeaderboard(state.leaderboard);
   displayMessage("Game loaded successfully!", true);
 }
 
 /**
- * Toggles the visibility of the leaderboard.
+ * Toggles the leaderboard display.
  */
-function toggleLeaderboard() {
+export function toggleLeaderboard() {
   const leaderboardElement = document.getElementById("leaderboard");
   leaderboardElement.style.display = leaderboardElement.style.display === "none" ? "block" : "none";
 }
 
-// Add Event Listeners
-function initializeGame() {
-  document.getElementById("generate-sword").addEventListener("click", generateSword);
-  document.getElementById("sell-sword").addEventListener("click", sellSword);
-  document.getElementById("upgrade-quality").addEventListener("click", upgradeQuality);
-  document.getElementById("upgrade-rarity").addEventListener("click", upgradeRarity);
-  document.getElementById("upgrade-mold").addEventListener("click", upgradeMold);
-  document.getElementById("save-game").addEventListener("click", saveGame);
-  document.getElementById("load-game").addEventListener("click", loadGame);
-  document.getElementById("toggle-leaderboard").addEventListener("click", toggleLeaderboard);
-
-  updateGUI();
-  updateLeaderboard();
-}
-
-// Initialize the game on page load
-window.addEventListener("DOMContentLoaded", initializeGame);
+// Initialize UI and Game
+initializeUI({
+  generateSword: () => generateSword(state),
+  sellSword: () => sellSword(state),
+  upgradeQuality: () => upgradeQuality(state),
+  upgradeRarity: () => upgradeRarity(state),
+  upgradeMold: () => upgradeMold(state),
+  saveGame: () => saveGame(state),
+  loadGame: () => loadGame(state),
+});
+updateGUI(state);
