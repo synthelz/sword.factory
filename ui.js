@@ -1,12 +1,6 @@
-// ui.js
-
 import { rarityClasses, moldClasses } from './data.js';
 import { displayMessage } from './utils.js';
 
-/**
- * Updates the GUI with the latest game state.
- * @param {Object} state - The game state to update in the UI.
- */
 export function updateGUI(state) {
   const {
     playerName,
@@ -19,39 +13,25 @@ export function updateGUI(state) {
     expToLevelUp,
   } = state;
 
-  // Update Player Name and Sword Display
   document.getElementById("player-name").textContent = `${playerName}'s Sword`;
-
-  // Update Level
   document.getElementById("level").textContent = level;
-
-  // Update Rarity
   const rarityElement = document.getElementById("rarity");
   rarityElement.textContent = rarity;
   rarityElement.className = rarityClasses[rarity] || "";
 
-  // Update Quality
   const qualityElement = document.getElementById("quality");
   qualityElement.textContent = quality;
 
-  // Update Mold
   const moldElement = document.getElementById("mold");
   moldElement.textContent = mold;
   moldElement.className = moldClasses[mold] || "";
 
-  // Update Sword Value
   document.getElementById("value").textContent = `$${swordValue}`;
-
-  // Update EXP
   const expBarFill = document.getElementById("exp-bar-fill");
   document.getElementById("exp-display").textContent = `EXP: ${exp} / ${expToLevelUp}`;
   expBarFill.style.width = `${(exp / expToLevelUp) * 100}%`;
 }
 
-/**
- * Updates the leaderboard UI.
- * @param {Array} leaderboard - The array of leaderboard entries.
- */
 export function updateLeaderboard(leaderboard) {
   const leaderboardElement = document.getElementById("leaderboard-list");
   leaderboardElement.innerHTML = "";
@@ -63,10 +43,6 @@ export function updateLeaderboard(leaderboard) {
   });
 }
 
-/**
- * Initializes UI event listeners for the game buttons.
- * @param {Object} actions - An object containing game logic functions to bind to buttons.
- */
 export function initializeUI(actions) {
   document.getElementById("generate-sword").addEventListener("click", actions.generateSword);
   document.getElementById("sell-sword").addEventListener("click", actions.sellSword);
@@ -75,13 +51,6 @@ export function initializeUI(actions) {
   document.getElementById("upgrade-mold").addEventListener("click", actions.upgradeMold);
   document.getElementById("save-game").addEventListener("click", actions.saveGame);
   document.getElementById("load-game").addEventListener("click", actions.loadGame);
-  document.getElementById("toggle-leaderboard").addEventListener("click", toggleLeaderboard);
+  document.getElementById("toggle-leaderboard").addEventListener("click", actions.toggleLeaderboard);
 }
 
-/**
- * Toggles the visibility of the leaderboard UI.
- */
-export function toggleLeaderboard() {
-  const leaderboardElement = document.getElementById("leaderboard");
-  leaderboardElement.style.display = leaderboardElement.style.display === "none" ? "block" : "none";
-}
