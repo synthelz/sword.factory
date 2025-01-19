@@ -1,21 +1,21 @@
 // utils.js
 
+import { rarityMultipliers, qualityMultipliers, moldMultipliers } from './data.js';
+
 /**
- * Display a message in the UI with a success or error style.
+ * Displays a message in the message box with success or error styling.
  * @param {string} message - The message to display.
- * @param {boolean} [isSuccess=true] - Whether the message is a success or error message.
+ * @param {boolean} isSuccess - True for success styling, false for error styling.
  */
 export function displayMessage(message, isSuccess = true) {
   const messageBox = document.getElementById("message-box");
-  if (messageBox) {
-    messageBox.textContent = message;
-    messageBox.style.color = isSuccess ? "green" : "red";
-  }
+  messageBox.textContent = message;
+  messageBox.style.color = isSuccess ? "green" : "red";
 }
 
 /**
- * Selects a weighted random attribute from a list.
- * @param {Array<{ name: string, weight: number }>} attributes - List of attributes with weights.
+ * Selects a random attribute from a weighted list.
+ * @param {Array} attributes - List of attributes with weights.
  * @returns {string} - The name of the selected attribute.
  */
 export function weightedRandom(attributes) {
@@ -29,28 +29,27 @@ export function weightedRandom(attributes) {
       return attr.name;
     }
   }
-
-  return attributes[attributes.length - 1].name; // Fallback to the last attribute.
 }
 
 /**
- * Calculates the value of a sword based on its attributes.
- * @param {number} baseValue - The base value of the sword.
- * @param {number} moldMultiplier - Multiplier for the mold.
- * @param {number} qualityMultiplier - Multiplier for the quality.
- * @param {number} rarityMultiplier - Multiplier for the rarity.
+ * Calculates the sword value based on base value and multipliers.
+ * @param {Object} state - The game state containing base value, rarity, quality, and mold.
  * @returns {number} - The calculated sword value.
  */
-export function calculateSwordValue(baseValue, moldMultiplier, qualityMultiplier, rarityMultiplier) {
-  return Math.floor(baseValue * moldMultiplier * qualityMultiplier * rarityMultiplier);
+export function calculateSwordValue(state) {
+  const moldMultiplier = state.mold ? moldMultipliers[state.mold] : 1;
+  const qualityMultiplier = state.quality ? qualityMultipliers[state.quality] : 1;
+  const rarityMultiplier = state.rarity ? rarityMultipliers[state.rarity] : 1;
+
+  return Math.floor(state.baseValue * moldMultiplier * qualityMultiplier * rarityMultiplier);
 }
 
 /**
- * Handles upgrading an attribute.
- * @param {Array<{ name: string, weight: number }>} attributeList - List of attributes.
- * @param {string} currentAttribute - The current attribute to upgrade.
- * @param {string} attributeName - Name of the attribute (for messaging).
- * @returns {string} - The upgraded attribute or the original if the upgrade fails.
+ * Upgrades an attribute with a chance of success based on weights.
+ * @param {Array} attributeList - The list of attributes.
+ * @param {string} currentAttribute - The current attribute name.
+ * @param {string} attributeName - The name of the attribute being upgraded (for messages).
+ * @returns {string} - The upgraded attribute name (or unchanged if upgrade fails).
  */
 export function upgradeAttribute(attributeList, currentAttribute, attributeName) {
   const currentIndex = attributeList.findIndex(attr => attr.name === currentAttribute);
