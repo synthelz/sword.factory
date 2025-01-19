@@ -44,13 +44,38 @@ export function updateLeaderboard(leaderboard) {
 }
 
 export function initializeUI(actions) {
-  document.getElementById("generate-sword").addEventListener("click", actions.generateSword);
-  document.getElementById("sell-sword").addEventListener("click", actions.sellSword);
-  document.getElementById("upgrade-quality").addEventListener("click", actions.upgradeQuality);
-  document.getElementById("upgrade-rarity").addEventListener("click", actions.upgradeRarity);
-  document.getElementById("upgrade-mold").addEventListener("click", actions.upgradeMold);
-  document.getElementById("save-game").addEventListener("click", actions.saveGame);
-  document.getElementById("load-game").addEventListener("click", actions.loadGame);
-  document.getElementById("toggle-leaderboard").addEventListener("click", actions.toggleLeaderboard);
+  // Attach listeners to buttons and log for debugging
+  document.getElementById("generate-sword").addEventListener("click", () => {
+    console.log("Generate Sword clicked");
+    actions.generateSword();
+  });
+  document.getElementById("sell-sword").addEventListener("click", () => {
+    console.log("Sell Sword clicked");
+    actions.sellSword();
+  });
+  document.getElementById("upgrade-quality").addEventListener("click", () => {
+    console.log("Upgrade Quality clicked");
+    actions.upgradeQuality();
+  });
+  document.getElementById("upgrade-rarity").addEventListener("click", () => {
+    console.log("Upgrade Rarity clicked");
+    actions.upgradeRarity();
+  });
+  document.getElementById("upgrade-mold").addEventListener("click", () => {
+    console.log("Upgrade Mold clicked");
+    actions.upgradeMold();
+  });
+  document.getElementById("save-game").addEventListener("click", () => {
+    console.log("Save Game clicked");
+    actions.saveGame();
+  });
+  document.getElementById("load-game").addEventListener("click", () => {
+    console.log("Load Game clicked");
+    actions.loadGame();
+  });
+  document.getElementById("toggle-leaderboard").addEventListener("click", () => {
+    console.log("Toggle Leaderboard clicked");
+    actions.toggleLeaderboard();
+  });
 }
 
