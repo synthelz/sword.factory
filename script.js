@@ -33,7 +33,23 @@ const moldMultipliers = {
   Diamond: 10,
 };
 
-// Weighted Rarity Data
+// Classes for Color Coding
+const rarityClasses = {
+  Common: "common",
+  Uncommon: "uncommon",
+  Rare: "rare",
+  Epic: "epic",
+  Legendary: "legendary",
+};
+
+const moldClasses = {
+  Bronze: "bronze",
+  Silver: "silver",
+  Gold: "gold",
+  Diamond: "diamond",
+};
+
+// Weighted Data
 const rarities = [
   { name: "Common", weight: 1 },
   { name: "Uncommon", weight: 32 },
@@ -87,10 +103,26 @@ function calculateSwordValue() {
 // Update Sword Display
 function updateGUI() {
   document.getElementById("player-name").textContent = `${playerName}'s Sword`;
+
+  // Update Level
   document.getElementById("level").textContent = level;
-  document.getElementById("rarity").textContent = rarity;
-  document.getElementById("quality").textContent = quality;
-  document.getElementById("mold").textContent = mold;
+
+  // Update Rarity
+  const rarityElement = document.getElementById("rarity");
+  rarityElement.textContent = rarity;
+  rarityElement.className = rarityClasses[rarity];
+
+  // Update Quality
+  const qualityElement = document.getElementById("quality");
+  qualityElement.textContent = quality;
+  qualityElement.className = rarityClasses[rarity]; // Rarity influences quality appearance
+
+  // Update Mold
+  const moldElement = document.getElementById("mold");
+  moldElement.textContent = mold;
+  moldElement.className = moldClasses[mold];
+
+  // Update Sword Value
   document.getElementById("value").textContent = `$${swordValue}`;
   document.getElementById("exp-display").textContent = `EXP: ${exp} / ${expToLevelUp}`;
   document.getElementById("exp-bar-fill").style.width = `${(exp / expToLevelUp) * 100}%`;
