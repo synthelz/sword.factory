@@ -43,28 +43,6 @@
       gap: 10px;
     }
 
-    .upgrade-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 14px;
-      border: none;
-      border-radius: 5px;
-      background-color: #444;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #666;
-    }
-
     .exp-bar {
       background-color: #444;
       border-radius: 5px;
@@ -83,6 +61,21 @@
       text-align: center;
       margin-top: 10px;
     }
+
+    button {
+      padding: 10px 20px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #666;
+    }
   </style>
 </head>
 <body>
@@ -90,11 +83,7 @@
     <div class="sword-container">
       <div id="sword-gui" class="sword-gui">
         <h2 id="player-name">Player's Sword</h2>
-        <p>
-          Level <span id="level">1</span> | 
-          Rarity: <span id="rarity">Basic-</span> | 
-          Quality: <span id="quality">Broken</span>
-        </p>
+        <p>Level <span id="level">1</span> | Rarity: <span id="rarity">Basic-</span> | Quality: <span id="quality">Broken</span></p>
         <p>Mold: <span id="mold">Normal</span></p>
         <p>Value: <span id="value">$0</span></p>
       </div>
