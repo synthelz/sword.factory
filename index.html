@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sword Game</title>
+  <title>Sword Factory Game</title>
   <style>
-    /* General Styles */
     body {
       font-family: Arial, sans-serif;
       background-color: #1e1e1e;
@@ -44,37 +43,11 @@
       gap: 10px;
     }
 
-    .sword-gui h2 {
-      font-size: 18px;
-      margin: 0;
-      text-align: left;
-    }
-
-    .sword-attributes {
-      font-size: 16px;
-      margin-top: 5px;
-      text-align: left;
-    }
-
-    .sword-mold-value {
-      margin-top: 10px;
-      font-size: 14px;
-      text-align: right;
-      align-self: flex-end;
-    }
-
     .upgrade-buttons {
       display: flex;
       justify-content: center;
       gap: 10px;
       margin-top: 10px;
-    }
-
-    .other-buttons {
-      margin-left: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
     }
 
     button {
@@ -110,34 +83,19 @@
       text-align: center;
       margin-top: 10px;
     }
-
-    /* Color Coding */
-    .common { color: #cccccc; }
-    .uncommon { color: #00ff00; }
-    .rare { color: #0000ff; }
-    .epic { color: #800080; }
-    .legendary { color: #ffa500; }
-
-    /* Mold-Specific Colors */
-    .bronze { color: #cd7f32; } /* Brown */
-    .silver { color: #c0c0c0; } /* Gray */
-    .gold { color: #ffd700; }   /* Yellow */
-    .diamond { color: #b9f2ff; } /* Light Blue */
   </style>
 </head>
 <body>
   <div class="game-container">
-    <!-- Sword and Upgrade Buttons -->
+    <!-- Sword Display -->
     <div class="sword-container">
-      <!-- Sword GUI -->
       <div id="sword-gui" class="sword-gui">
         <h2 id="player-name">Player's Sword</h2>
-        <div class="sword-attributes">
-          <p id="level-rarity-quality">Level <span id="level" class="common">1</span> | <span id="rarity" class="common">Common</span> / <span id="quality" class="common">Fine</span></p>
-        </div>
-        <div class="sword-mold-value">
-          <span id="mold" class="bronze">Bronze</span> <span id="value">$1,234</span>
-        </div>
+        <p id="level-rarity-quality">
+          Level <span id="level">1</span> | Rarity: <span id="rarity">Broken</span> | Quality: <span id="quality">Broken</span>
+        </p>
+        <p>Mold: <span id="mold">Bronze</span></p>
+        <p>Value: <span id="value">$0</span></p>
       </div>
 
       <!-- Upgrade Buttons -->
@@ -158,19 +116,10 @@
     <div class="other-buttons">
       <button id="generate-sword">Generate Sword</button>
       <button id="sell-sword">Sell Sword</button>
-      <button id="save-game">Save Game</button>
-      <button id="load-game">Load Game</button>
-      <button id="toggle-leaderboard">Toggle Leaderboard</button>
     </div>
   </div>
 
-  <!-- Leaderboard -->
-  <div id="leaderboard" style="display: none; margin-top: 20px; color: white;">
-    <h2>Leaderboard</h2>
-    <ol id="leaderboard-list"></ol>
-  </div>
-
-  <p id="message-box" style="text-align: center; font-size: 14px; height: 20px;"></p>
+  <p id="message-box" style="text-align: center; height: 20px;"></p>
   <script src="script.js"></script>
 </body>
 </html>
