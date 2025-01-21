@@ -44,37 +44,29 @@ export function updateLeaderboard(leaderboard) {
 }
 
 export function initializeUI(actions) {
-  // Attach listeners to buttons and log for debugging
-  document.getElementById("generate-sword").addEventListener("click", () => {
-    console.log("Generate Sword clicked");
-    actions.generateSword();
-  });
-  document.getElementById("sell-sword").addEventListener("click", () => {
-    console.log("Sell Sword clicked");
-    actions.sellSword();
-  });
-  document.getElementById("upgrade-quality").addEventListener("click", () => {
-    console.log("Upgrade Quality clicked");
-    actions.upgradeQuality();
-  });
-  document.getElementById("upgrade-rarity").addEventListener("click", () => {
-    console.log("Upgrade Rarity clicked");
-    actions.upgradeRarity();
-  });
-  document.getElementById("upgrade-mold").addEventListener("click", () => {
-    console.log("Upgrade Mold clicked");
-    actions.upgradeMold();
-  });
-  document.getElementById("save-game").addEventListener("click", () => {
-    console.log("Save Game clicked");
-    actions.saveGame();
-  });
-  document.getElementById("load-game").addEventListener("click", () => {
-    console.log("Load Game clicked");
-    actions.loadGame();
-  });
-  document.getElementById("toggle-leaderboard").addEventListener("click", () => {
-    console.log("Toggle Leaderboard clicked");
-    actions.toggleLeaderboard();
+  console.log("Initializing UI and attaching event listeners...");
+
+  const buttons = [
+    { id: "generate-sword", action: actions.generateSword },
+    { id: "sell-sword", action: actions.sellSword },
+    { id: "upgrade-quality", action: actions.upgradeQuality },
+    { id: "upgrade-rarity", action: actions.upgradeRarity },
+    { id: "upgrade-mold", action: actions.upgradeMold },
+    { id: "save-game", action: actions.saveGame },
+    { id: "load-game", action: actions.loadGame },
+    { id: "toggle-leaderboard", action: actions.toggleLeaderboard }
+  ];
+
+  buttons.forEach(button => {
+    const element = document.getElementById(button.id);
+    if (element) {
+      console.log(`Attaching event listener to ${button.id}...`);
+      element.addEventListener("click", () => {
+        console.log(`${button.id} clicked`);
+        button.action();
+      });
+    } else {
+      console.error(`Element with id ${button.id} not found!`);
+    }
   });
 }
