@@ -1,5 +1,3 @@
-// game.js
-
 import { rarities, qualities, molds } from './data.js';
 import { calculateSwordValue, weightedRandom, displayMessage, upgradeAttribute } from './utils.js';
 import { updateGUI, updateLeaderboard, initializeUI } from './ui.js';
