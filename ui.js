@@ -44,8 +44,6 @@ export function updateLeaderboard(leaderboard) {
 }
 
 export function initializeUI(actions) {
-  console.log("Initializing UI and attaching event listeners...");
-
   const buttons = [
     { id: "generate-sword", action: actions.generateSword },
     { id: "sell-sword", action: actions.sellSword },
@@ -60,9 +58,7 @@ export function initializeUI(actions) {
   buttons.forEach(button => {
     const element = document.getElementById(button.id);
     if (element) {
-      console.log(`Attaching event listener to ${button.id}...`);
       element.addEventListener("click", () => {
-        console.log(`${button.id} clicked`);
         button.action();
       });
     } else {
