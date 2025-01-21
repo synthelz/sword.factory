@@ -78,4 +78,3 @@ export function initializeUI(actions) {
     actions.toggleLeaderboard();
   });
 }
-
