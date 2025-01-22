@@ -1,5 +1,3 @@
-// utils.js
-
 import { rarityMultipliers, qualityMultipliers, moldMultipliers } from './data.js';
 
 /**
