@@ -1,6 +1,7 @@
+import { generateSword, sellSword, upgradeQuality, upgradeRarity, upgradeMold, saveGame, loadGame, toggleLeaderboard } from './actions.js';
+import { updateGUI, updateLeaderboard, initializeUI } from './ui.js';
 import { rarities, qualities, molds } from './data.js';
 import { calculateSwordValue, weightedRandom, displayMessage, upgradeAttribute } from './utils.js';
-import { updateGUI, updateLeaderboard, initializeUI } from './ui.js';
 
 // Initial State
 const state = {
